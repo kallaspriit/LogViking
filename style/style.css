@@ -1,0 +1,144 @@
+HTML,
+BODY {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	color: #333;
+}
+A {
+	color: #333;
+	text-decoration: none;
+}
+.is-hidden {
+	display: none;
+}
+
+/* log table */
+.log-table {
+	width: 100%;
+	border-spacing: 1px;
+    border-collapse: separate;
+}
+.log-table TH {
+	text-align: left;
+	background-color: #EEE;
+	padding: 4px 10px;
+}
+.log-table TD {
+	padding: 4px 10px;
+	font-family: "Consolas", "Courier New", Courier, mono;
+}
+.log-table THEAD,
+.log-table TBODY {
+	display: block;
+}
+.log-table TBODY {
+	height: 600px;
+	overflow: hidden;
+	overflow-y: scroll;
+}
+.log-table TR.odd TD {
+	background-color: #F8F8F8;
+}
+.log-table TR.type-info TD {
+	background-color: #F8F8F8 !important;
+}
+.log-table TR.type-warn TD {
+	background-color: #FFF4C8 !important;
+}
+.log-table TR.type-error TD {
+	background-color: #FFBBC8 !important;
+}
+.log-table TD.col-component A {
+	display: block;
+	box-sizing: border-box;
+	width: 200px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.table-titles TH {
+	background-color: #CCC;
+}
+.type-column {
+	width: 1%;
+}
+.component-column {
+	width: 200px;
+}
+.data-column {
+
+}
+.col-type {
+	text-align: center;
+}
+
+/* value types */
+.value-string {
+	font-style: normal;
+	color: #000;
+}
+.value-null {
+	font-style: italic;
+	color: #090;
+}
+.value-undefined {
+	font-style: italic;
+	color: #F00;
+}
+.value-number {
+	font-style: italic;
+	color: #009;
+}
+.value-date {
+	font-style: italic;
+	color: #990;
+}
+.value-boolean {
+	font-style: italic;
+	color: #900;
+}
+.value-function {
+	font-style: italic;
+	color: #099;
+}
+.value-object {
+	font-style: italic;
+	color: #333;
+}
+.value-array {
+	font-style: italic;
+	color: #333;
+}
+
+/* filter */
+.filter-input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 30px;
+	padding: 0 8px;
+	border: 1px solid #CCC;
+	outline: none;
+	font-family: "Consolas", "Courier New", Courier, mono;
+}
+.type-filters {
+	padding: 0 10px !important;
+	white-space: nowrap;
+}
+.type-filter {
+	display: inline-block;
+	padding: 0 4px;
+	margin: 0 1px;
+	border: 1px solid #CCC;
+	color: #666;
+	font-size: 80%;
+}
+.filter-input:hover,
+.type-filter:hover {
+	border: 1px solid #666;
+}
+.type-filter.is-selected {
+	background-color: #FFF;
+	color: #333;
+}
