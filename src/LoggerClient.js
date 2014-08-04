@@ -58,6 +58,9 @@
 			this._setTableHeight();
 			this._setColumnWidths();
 		}.bind(this));
+
+		//this._setTableHeight();
+		this._setColumnWidths();
 	};
 
 	LoggerClient.prototype._setupUI = function() {
@@ -166,6 +169,10 @@
 		if (wasAtBottom) {
 			this._scrollToBottom();
 		}
+
+		if (info.type === 'error') {
+			this._playAlert();
+		}
 	};
 
 	LoggerClient.prototype._setTableHeight = function() {
@@ -190,8 +197,13 @@
 
 	LoggerClient.prototype._setColumnWidths = function() {
 		var self = this,
+			windowWidth = $(window).width(),
+			typeColumnWidth = this._$header.find('TR:eq(0) TH:eq(0)').outerWidth(),
+			componentColumnWidth = this._$header.find('TR:eq(0) TH:eq(1)').outerWidth(),
 			columnCount = this._$header.find('TR:eq(0) TH').length,
 			columnWidth;
+
+		this._$header.find('TR:eq(0) TH:eq(2)').width(windowWidth - typeColumnWidth - componentColumnWidth - 25);
 
 		this._$header.find('TR:eq(0) TH').each(function(i) {
 			columnWidth = $(this).width();
@@ -346,7 +358,7 @@
 			return '<span class="value-number" title="number">' + value + '</span>';
 		} else if (typeof(value) === 'string') {
 			return '<span class="value-string" title="string">' +
-				(level > 1 ? '\'' : '') + value + (level > 1 ? '\'' : '') + '</span>';
+				(level > 1 ? '\'' : '') + value.replace('<', '&lt;').replace('>', '&gt;') + (level > 1 ? '\'' : '') + '</span>';
 		} else if (typeof(value) === 'function') {
 			return '<span class="value-function" title="function">[function]</span>';
 		} else if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -434,6 +446,16 @@
 
 	LoggerClient.prototype._formatDatetime = function(date) {
 		return this._formatDate(date, true) + ' ' + this._formatTime(date);
+	};
+
+	LoggerClient.prototype._playAlert = function() {
+		this._playSound('sounds/alert.ogg');
+	};
+
+	LoggerClient.prototype._playSound = function(filename) {
+		var audio = new Audio(filename);
+
+		audio.play();
 	};
 
 	exports.LoggerClient = LoggerClient;
