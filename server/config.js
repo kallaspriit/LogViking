@@ -3,7 +3,7 @@
 
 	module.exports = {
 		websocket: {
-			host: '192.168.1.69',
+			host: 'localhost',
 			port: 2222
 		}
 	};
