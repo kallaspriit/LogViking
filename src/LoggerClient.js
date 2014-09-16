@@ -1,6 +1,19 @@
 (function(exports, $) {
 	'use strict';
 
+	/**
+	 * Ideas:
+	 * > F5 reloads the application
+	 * > show number of LOG/INFO/WARN/ERROR items, clicking on them shows only of given type
+	 * > buttons in filter fields to clear them
+	 * > filters use perl regex instead of custom ones
+	 * > field for executing javascript on the application side with auto-complete, arrow history
+	 * > form for selecting which ip/port to connect to, stored in localstorage
+	 * > indicator for connected clients
+	 * > button for clearing log and reloading app
+	 * > give filters names and choose old ones from dropdown
+	 */
+
 	var LoggerClient = function(config) {
 		this._config = config;
 		this._ws = null;

@@ -51,7 +51,7 @@ A {
 .log-table TD.col-component A {
 	display: block;
 	box-sizing: border-box;
-	width: 200px;
+	width: 280px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -60,10 +60,10 @@ A {
 	background-color: #DFDFDF;
 }
 .type-column {
-	width: 220px;
+	width: 200px;
 }
 .component-column {
-	width: 220px;
+	width: 300px;
 }
 .data-column {
 
