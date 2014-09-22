@@ -1,0 +1,18 @@
+/* general tag-based rules */
+BODY {
+	padding: 70px 0 70px;
+}
+
+/* server form */
+.app-port {
+	width: 80px !important;
+}
+
+/* footer form */
+.app-footer-form {
+	padding: 0;
+	margin: 8px 0 0 0;
+}
+.app-footer-form .form-group {
+	margin: 0;
+}
