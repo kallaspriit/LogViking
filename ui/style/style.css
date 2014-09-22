@@ -24,6 +24,9 @@ BODY {
 .app-type-filter .btn-default .badge {
 	background-color: #666;
 }
+.app-type-filter BUTTON {
+	width: 70px;
+}
 
 /* server form */
 .app-port {
