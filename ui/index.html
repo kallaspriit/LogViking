@@ -10,50 +10,131 @@
 </head>
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
-
-		<form class="navbar-form navbar-left">
-			<div class="btn-group">
-				<button type="button" class="btn btn-default">log (2)</button>
-				<button type="button" class="btn btn-info">info (5)</button>
-				<button type="button" class="btn btn-warning active">warn (1)</button>
-				<button type="button" class="btn btn-danger active">error (2)</button>
-			</div>
-		</form>
-		<form class="navbar-form navbar-right form-inline">
-			<div class="form-group">
-				<input class="form-control" type="text" placeholder="Hostname">
-			</div>
-			<div class="form-group">
-				<input class="form-control app-port" type="text" placeholder="Port">
-			</div>
-			<button type="submit" class="btn btn-default">Create server</button>
-		</form>
-	</div>
-</div>
-
-<div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-	<div class="container-fluid">
-		<form class="app-footer-form">
-			<div class="row">
-				<div class="form-group col-xs-12">
-					<div class="input-group">
-						<input class="form-control" type="text" placeholder="Execute remote JavaScript">
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">X</button>
-						</span>
+	<div class="navbar navbar-default navbar-fixed-top app-header" role="navigation">
+		<div class="container-fluid">
+			<form class="navbar-form navbar-left app-filter-form">
+				<div class="btn-group app-type-filter">
+					<button type="button" class="btn btn-default">log <span class="badge">2</span></button>
+					<button type="button" class="btn btn-info">info <span class="badge">5</span></button>
+					<button type="button" class="btn btn-warning active">warn <span class="badge">1</span></button>
+					<button type="button" class="btn btn-danger active">error <span class="badge">2</span></button>
+				</div>
+				<button type="button" class="btn btn-link">Show all</button>
+			</form>
+			<form class="navbar-form navbar-right form-inline">
+				<div class="form-group">
+					<div class="app-clearable-input">
+						<input class="form-control" type="text" placeholder="Hostname">
+						<a class="btn" href="#"><i class="glyphicon glyphicon-remove-circle"></i></a>
 					</div>
 				</div>
-			</div>
-		</form>
+				<div class="form-group">
+					<input class="form-control app-port" type="text" placeholder="Port">
+				</div>
+				<button type="submit" class="btn btn-default">Create server</button>
+			</form>
+			<!--div class="app-status">client connected</div-->
+			<!--div class="app-logo">LogViking</div-->
+		</div>
 	</div>
-</div>
 
-<div class="container-fluid">
-...
-</div>
-<script src="lib/jquery/jquery-2.1.1.min.js"></script>
-<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<div class="container-fluid app-contents">
+		<button type="button" class="btn btn-sm btn-default app-clear-btn">Clear messages</button>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="app-table-time">Time</th>
+					<th class="app-table-component">Component</th>
+					<th class="app-table-message">Message</th>
+				</tr>
+				<tr>
+					<td>
+						<div class="input-group">
+							<input type="text" class="form-control" value="5m">
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select
+									<span class="caret"></span></button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">60 seconds</a></li>
+									<li><a href="#">2 minutes</a></li>
+									<li><a href="#">10 minutes</a></li>
+									<li><a href="#">all</a></li>
+								</ul>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="app-clearable-input">
+							<input type="text" class="form-control" placeholder="Filter by component">
+							<a class="btn" href="#"><i class="glyphicon glyphicon-remove-circle"></i></a>
+						</div>
+					</td>
+					<td>
+						<div class="app-clearable-input">
+							<input type="text" class="form-control" placeholder="Filter by message">
+							<a class="btn" href="#"><i class="glyphicon glyphicon-remove-circle"></i></a>
+						</div>
+					</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>5 minutes ago</td>
+					<td>Player</td>
+					<td>Playing http://example.com/movies.m3u8</td>
+				</tr>
+				<tr class="info">
+					<td>2 minute ago</td>
+					<td>Player</td>
+					<td>Info example</td>
+				</tr>
+				<tr class="warning">
+					<td>1 minute ago</td>
+					<td>Player</td>
+					<td>Info example</td>
+				</tr>
+				<tr class="danger">
+					<td>seconds ago</td>
+					<td>Player</td>
+					<td>Info example</td>
+				</tr>
+				<tr class="success">
+					<td>just now</td>
+					<td>JavaScript</td>
+					<td>Storage {options: "{"filter":{"type":["log","info","warn","error"],"component":[],"data":[]}}", tab_/classes/Config.html: "properties", tab_/classes/FlowCarousel.html: "methods", length: 3}</td>
+				</tr>
+				<tr>
+					<td>2 minutes ago</td>
+					<td>Player</td>
+					<td>Playing http://example.com/movies.m3u8</td>
+				</tr>
+				<tr>
+					<td>1 minute ago</td>
+					<td>Player</td>
+					<td>paused</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="navbar navbar-default navbar-fixed-bottom app-footer" role="navigation">
+		<div class="container-fluid">
+			<form class="app-footer-form">
+				<div class="row">
+					<div class="form-group col-xs-12">
+						<div class="input-group">
+							<input class="form-control" type="text" placeholder="Execute remote JavaScript">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button">X</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="lib/jquery/jquery-2.1.1.min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>

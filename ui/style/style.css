@@ -3,6 +3,28 @@ BODY {
 	padding: 70px 0 70px;
 }
 
+/* header, footer and contents */
+.app-header,
+.app-contents,
+.app-footer {
+	min-width: 850px;
+}
+
+/* filter form */
+.app-filter-form {
+	padding-left: 0;
+}
+
+/* type filter badges */
+.app-type-filter .badge {
+	top: -12px;
+	margin-left: -11px;
+	right: -10px;
+}
+.app-type-filter .btn-default .badge {
+	background-color: #666;
+}
+
 /* server form */
 .app-port {
 	width: 80px !important;
@@ -15,4 +37,74 @@ BODY {
 }
 .app-footer-form .form-group {
 	margin: 0;
+}
+
+/* clear button */
+.app-clear-btn {
+	position: absolute;
+	right: 24px;
+	top: 68px;
+}
+
+/* main entries table */
+.app-table-time {
+	width: 10%;
+}
+.app-table-component {
+	width: 20%;
+}
+.app-table-message {
+	width: 70%;
+}
+
+/* clear input button */
+.app-clearable-input {
+	position: relative;
+}
+.app-clearable-input INPUT {
+	padding-right: 34px;
+}
+.app-clearable-input A.btn {
+	position: absolute !important;
+	color: #CCC;
+	text-decoration: none;
+	right: 0px;
+	top: 0px;
+	z-index: 2;
+	line-height: 23px;
+}
+
+/* app status */
+.app-status {
+	position: absolute;
+	width: 304px;
+	height: 22px;
+	line-height: 17px;
+	/* left: 50%; */
+	top: 50px;
+	/* margin-left: -100px; */
+	background-color: #f8f8f8;
+	text-align: center;
+	border-left: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E7E7E7;
+	border-right: 1px solid #E7E7E7;
+	border-radius: 0 0 4px 4px;
+	right: 144px;
+}
+
+/* logo */
+.app-logo {
+	width: 80px;
+	height: 80px;
+	background: url('../images/logo.png') no-repeat left top;
+	position: absolute;
+	left: 50%;
+	z-index: 100;
+	background-size: contain;
+	z-index: 1;
+	top: -14px;
+	margin-left: -111px;
+	padding-left: 87px;
+	line-height: 80px;
+	font-size: 32px;
 }
