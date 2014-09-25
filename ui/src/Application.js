@@ -1,8 +1,10 @@
 define([
 	'logviking/Logger',
 	'logviking/ConsoleLog',
-	'logviking/SocketLog',
+	'logviking/SocketLog'
 ], function(logger, ConsoleLog, SocketLog) {
+	'use strict';
+
 	var log = logger.get('Application');
 
 	var Application = function() {
