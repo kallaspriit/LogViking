@@ -270,13 +270,48 @@
 		</div>
 	</div>
 
-	<script src="lib/jquery/jquery-2.1.1.min.js"></script>
-	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/requirejs/require.js"></script>
 	<script>
 
-	$('.dropdown-menu').find('input').click(function (e) {
-		e.stopPropagation();
+	// requirejs configuration
+	require.config({
+		// base url for all resources
+		baseURl: '',
+
+		// paths configuration of source directories and components
+		paths: {
+			// main directories
+			src: 'src',
+			lib: 'lib',
+
+			// specific components
+			jquery: 'lib/jquery/jquery-2.1.1.min.js',
+			bootstrap: 'lib/bootstrap/js/bootstrap.js'
+		},
+
+		// configuration of exports and dependencies
+		shim: {
+			jquery: {
+				exports: '$'
+			},
+			bootstrap: {
+				deps: ['jquery']
+			}
+		}
 	});
+
+	// bootstrap the application
+	require(['src/Application'], function(Application) {
+		// register the app under window for easy inspection and debugging
+		var app = window.app = new Application();
+
+		app.bootstrap();
+	});
+
+	// TODO move to UI
+	/*$('.dropdown-menu').find('input').click(function (e) {
+		e.stopPropagation();
+	});*/
 
 	</script>
 </body>
