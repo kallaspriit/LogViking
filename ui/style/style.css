@@ -34,6 +34,74 @@
 .app-filter-form {
 	padding-left: 0;
 }
+.app-filter-form .btn {
+	position: relative;
+}
+.app-filter-form .btn SUP {
+	font-size: 11px;
+}
+.app-filter-form .btn.active {
+	background-color: #F8F8F8;
+}
+.app-filter-form .btn-default:after {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 4px;
+	height: 100%;
+}
+.app-filter-form .btn-default:first-child:after {
+	border-radius: 4px 0 0 4px;
+}
+.app-filter-log:after {
+	background-color: #CCC;
+}
+.app-filter-info:after {
+	background-color: #5BC0DE;
+}
+.app-filter-warn:after {
+	background-color: #F0AD4E;
+}
+.app-filter-error:after {
+	background-color: #D9534F;
+}
+.app-filter-javascript:after {
+	background-color: #5CB85C;
+}
+
+/* log table */
+.app-log-table TR TD:first-child {
+	border-left: 5px solid transparent;
+}
+.app-log-table TR.app-entry-log TD:first-child {
+	border-left-color: #CCC;
+}
+.app-log-table TR.app-entry-info TD:first-child {
+	border-left-color: #5BC0DE;
+}
+.app-log-table TR.app-entry-info:hover TD {
+	background-color: #d9edf7;
+}
+.app-log-table TR.app-entry-warn TD:first-child {
+	border-left-color: #F0AD4E;
+}
+.app-log-table TR.app-entry-warn:hover TD {
+	background-color: #fcf8e3;
+}
+.app-log-table TR.app-entry-error TD:first-child {
+	border-left-color: #D9534F;
+}
+.app-log-table TR.app-entry-error:hover TD {
+	background-color: #f2dede;
+}
+.app-log-table TR.app-entry-javascript TD:first-child {
+	border-left-color: #5CB85C;
+}
+.app-log-table TR.app-entry-javascript:hover TD {
+	background-color: #dff0d8;
+}
 
 /* type filter badges */
 .app-type-filter .badge {
@@ -83,7 +151,7 @@
 	margin: 0;
 }
 .app-clear-command-btn {
-	right: 80px !important;
+	right: 32px !important;
 }
 
 /* clear button */
@@ -100,6 +168,10 @@
 .app-dropdown-btn {
 	float: right;
 	margin-top: -26px;
+	color: #777;
+}
+.app-dropdown-btn:hover {
+	color: #333;
 }
 
 /* main entries table */

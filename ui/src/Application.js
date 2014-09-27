@@ -48,8 +48,9 @@ define([
 	Application.prototype._setupServer = function() {
 		log.info('setup server');
 
-		this._server = new Server(config.serverConfig);
+		this._server = new Server();
 		this._server.init();
+		this._server.listen(config.serverConfig.host, config.serverConfig.port);
 	};
 
 	return Application;
