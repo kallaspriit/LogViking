@@ -28,7 +28,7 @@ define([
 
 	Application.prototype._setupLogger = function() {
 		logger.addReporter(new ConsoleLog());
-		logger.addReporter(new SocketLog('192.168.1.69', 2222));
+		//logger.addReporter(new SocketLog('localhost', 2222));
 	};
 
 	Application.prototype._setupConfig = function() {
@@ -42,6 +42,8 @@ define([
 
 		this._ui = new UserInterface();
 		this._ui.init();
+
+		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));
 	};
 
 
@@ -51,6 +53,12 @@ define([
 		this._server = new Server();
 		this._server.init();
 		this._server.listen(config.serverConfig.host, config.serverConfig.port);
+	};
+
+	Application.prototype._onReloading = function() {
+		log.info('application is reloading');
+
+		this._server.stop();
 	};
 
 	return Application;

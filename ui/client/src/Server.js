@@ -16,14 +16,23 @@ define([
 		log.info('init');
 
 		this._setupSocketServer();
-
 		this._setupRpcInterface();
 	};
 
 	Server.prototype.listen = function(host, port) {
 		log.info('starting socket server on ' + host + ':' + port);
 
-		this._webSocketServer.listen(host, port);
+		try {
+			this._webSocketServer.listen(host, port);
+		} catch (e) {
+			log.error('failed to start socket server on ' + host + ':' + port);
+		}
+	};
+
+	Server.prototype.stop = function() {
+		log.info('stopping server');
+
+		this._webSocketServer.stop();
 	};
 
 	Server.prototype._setupSocketServer = function() {

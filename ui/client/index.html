@@ -305,11 +305,15 @@
 		</div>
 	</div>
 
-	<script src="lib/requirejs/require.js"></script>
+	<script src="lib/requirejs/requirejs.js"></script>
 	<script>
 
+	process.on('uncaughtException', function (err) {
+   		alert('exception: ' + err.message);
+	});
+
 	// requirejs configuration
-	require.config({
+	requirejs.config({
 		// base url for all resources
 		baseURl: '',
 
@@ -337,7 +341,7 @@
 	});
 
 	// bootstrap the application
-	require(['src/Application'], function(Application) {
+	requirejs(['src/Application'], function(Application) {
 		// register the app under window for easy inspection and debugging
 		var app = window.app = new Application();
 

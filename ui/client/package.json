@@ -12,19 +12,22 @@
     "log",
     "client"
   ],
+  "nodejs": true,
+  "node-remote": "*",
   "window": {
     "title": "LogViking",
     "icon": "logo.png",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "width": 1280,
     "height": 650,
-    "position": "mouse",
+    "position": "center",
     "min_width": 600,
     "min_height": 350
   },
   "webkit": {
-    "plugin": true
+    "plugin": true,
+    "page-cache": false
   },
   "dependencies": {
     "ws": "^0.4.31"

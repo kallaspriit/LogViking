@@ -1,15 +1,16 @@
 define([
 	'logviking/Logger',
-], function(logger) {
+	'src/Util',
+], function(logger, util) {
 	'use strict';
 
 	var WebSocket = require('ws'),
 		SocketServer = WebSocket.Server,
-		util = require('./Util'),
 		log = logger.get('WebSocketServer');
 
 	var WebSocketServer = function() {
 		this._socket = null;
+		this._started = false;
 		this._clients = [];
 		this._rpcInterface = null;
 		this._clientIdCounter = 0;
@@ -34,6 +35,8 @@ define([
 			port: port,
 			protocolVersion: 13
 		});
+
+		this._started = true;
 
 		this._socket.on('connection', function(client) {
 			this._clients.push(client);
@@ -154,6 +157,20 @@ define([
 
 			this.onClientConnected(client);
 		}.bind(this));
+	};
+
+	WebSocketServer.prototype.stop = function() {
+		if (!this._started) {
+			log.warn('stopping server requested but not started');
+
+			return;
+		}
+
+		this._socket.close();
+	};
+
+	WebSocketServer.prototype.isStarted = function() {
+		return this._started;
 	};
 
 	WebSocketServer.prototype.broadcast = function(message) {
