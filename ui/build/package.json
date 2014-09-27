@@ -1,0 +1,20 @@
+{
+  "name": "LogViking",
+  "description": "LogViking Build",
+  "version": "0.1.0",
+  "keywords": [
+    "logviking",
+    "node-webkit",
+    "javascript",
+    "logging",
+    "logger",
+    "log",
+    "client"
+  ],
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-compress": "^0.12.0",
+    "grunt-contrib-copy": "^0.6.0",
+    "matchdep": "^0.3.0"
+  }
+}

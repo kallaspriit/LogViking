@@ -1,3 +1,5 @@
 /node_modules
 /.idea
 /ui/node_modules
+/ui/build/node_modules
+/ui/client/node_modules
