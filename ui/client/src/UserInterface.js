@@ -1,11 +1,12 @@
 define([
 	'src/EventEmitter',
+	'React',
 	'logviking/Logger',
 	'src/Platform',
 	'jquery',
+	'components/HelloMessage',
 	'bootstrap',
-
-], function(EventEmitter, logger, platform, $) {
+], function(EventEmitter, React, logger, platform, $, HelloMessage) {
 	'use strict';
 	
 	var log = logger.get('UserInterface');
@@ -29,6 +30,11 @@ define([
 		log.info('init');
 
 		this._setupKeyListeners();
+
+		React.renderComponent(
+			new HelloMessage({name: 'Priit Kallas'}),
+			document.getElementById('test')
+		);
 	};
 
 	UserInterface.prototype.showDevTools = function() {

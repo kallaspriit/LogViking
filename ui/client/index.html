@@ -9,7 +9,6 @@
 	<link href="style/style.css" rel="stylesheet">
 </head>
 <body>
-
 	<div class="navbar navbar-default navbar-fixed-top app-header" role="navigation">
 		<div class="container-fluid app-navbar-container">
 			<form class="navbar-form navbar-left app-filter-form">
@@ -210,7 +209,9 @@
 					<tr class="app-entry-log">
 						<td class="app-table-time">5 minutes ago</td>
 						<td class="app-table-component">Player</td>
-						<td class="app-table-message">Playing http://example.com/movies.m3u8</td>
+						<td class="app-table-message">
+							<div id="test"></div>
+						</td>
 					</tr>
 					<tr class="app-entry-info">
 						<td>2 minute ago</td>
@@ -308,9 +309,9 @@
 	<script src="lib/requirejs/requirejs.js"></script>
 	<script>
 
-	process.on('uncaughtException', function (err) {
+	/*process.on('uncaughtException', function (err) {
    		alert('exception: ' + err.message);
-	});
+	});*/
 
 	// requirejs configuration
 	requirejs.config({
@@ -322,11 +323,13 @@
 			// main directories
 			src: 'src',
 			lib: 'lib',
+			components: 'components-build',
 			logviking: 'lib/logviking',
 
 			// specific components
 			jquery: 'lib/jquery/jquery-2.1.1.min',
-			bootstrap: 'lib/bootstrap/js/bootstrap'
+			bootstrap: 'lib/bootstrap/js/bootstrap',
+			React: 'lib/react/react'
 		},
 
 		// configuration of exports and dependencies

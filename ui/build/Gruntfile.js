@@ -22,6 +22,29 @@ module.exports = function (grunt) {
 			}
 		},
 
+		// https://github.com/ericclemmons/grunt-react
+		react: {
+			jsx: {
+				expand: true,
+				cwd: '../client/components',
+				src: ['**/*.js'],
+				dest: '../client/components-build',
+				ext: '.js',
+				watch: true
+			}
+		},
+
+		// https://github.com/gruntjs/grunt-contrib-watch
+		watch: {
+			jsx: {
+				files: ['../client/components/**/*.js'],
+				tasks: ['react:jsx'],
+				options: {
+					spawn: false,
+				},
+			},
+		},
+
 		// https://github.com/gruntjs/grunt-contrib-copy
 		//copy: {
 		//	build: {
@@ -36,5 +59,7 @@ module.exports = function (grunt) {
 	});
 
 	// register default task
-	grunt.registerTask('default', ['compress:build']);
+	grunt.registerTask('build', ['react:jsx', 'compress:build']);
+	grunt.registerTask('jsx', ['watch:jsx']);
+	grunt.registerTask('default', ['build']);
 };

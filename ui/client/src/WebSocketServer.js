@@ -4,6 +4,13 @@ define([
 ], function(logger, util) {
 	'use strict';
 
+	if (typeof require === 'undefined') {
+		return function() {
+			this.setRpcInterface = function() {};
+			this.listen = function() {};
+		};
+	}
+
 	var WebSocket = require('ws'),
 		SocketServer = WebSocket.Server,
 		log = logger.get('WebSocketServer');
