@@ -28,7 +28,7 @@ define([
 
 		render: function () {
 			return React.DOM.div(null, 
-				StrongMessage(null, "Hello ", this.props.name, "!"), 
+				StrongMessage(null, "Hey ", this.props.name, "!"), 
 				React.DOM.p(null, "elapsed: ", this.state.seconds)
 			);
 		}

@@ -4,9 +4,9 @@ define([
 	'logviking/Logger',
 	'src/Platform',
 	'jquery',
-	'components/HelloMessage',
+	'components/Application',
 	'bootstrap',
-], function(EventEmitter, React, logger, platform, $, HelloMessage) {
+], function(EventEmitter, React, logger, platform, $, ApplicationComponent) {
 	'use strict';
 	
 	var log = logger.get('UserInterface');
@@ -30,11 +30,8 @@ define([
 		log.info('init');
 
 		this._setupKeyListeners();
-
-		React.renderComponent(
-			new HelloMessage({name: 'Priit Kallas'}),
-			document.getElementById('test')
-		);
+		this._setupApplication();
+		this._setupEventListeners();
 	};
 
 	UserInterface.prototype.showDevTools = function() {
@@ -75,6 +72,19 @@ define([
 
 			return result;
 		}.bind(this));
+	};
+
+	UserInterface.prototype._setupApplication = function() {
+		React.renderComponent(
+			ApplicationComponent(null),
+			document.getElementById('application-wrap')
+		);
+	};
+
+	UserInterface.prototype._setupEventListeners = function() {
+		$('.dropdown-menu').find('input').click(function (e) {
+			e.stopPropagation();
+		});
 	};
 
 	UserInterface.prototype._onKeyDown = function(e) {

@@ -28,7 +28,7 @@ define([
 
 		render: function () {
 			return <div>
-				<StrongMessage>Hello {this.props.name}!</StrongMessage>
+				<StrongMessage>Hey {this.props.name}!</StrongMessage>
 				<p>elapsed: {this.state.seconds}</p>
 			</div>;
 		}

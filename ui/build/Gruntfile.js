@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 			jsx: {
 				expand: true,
 				cwd: '../client/components',
-				src: ['**/*.js'],
+				src: ['**/*.jsx'],
 				dest: '../client/components-build',
 				ext: '.js',
 				watch: true
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
 		// https://github.com/gruntjs/grunt-contrib-watch
 		watch: {
 			jsx: {
-				files: ['../client/components/**/*.js'],
+				files: ['../client/components/**/*.jsx'],
 				tasks: ['react:jsx'],
 				options: {
 					spawn: false,
