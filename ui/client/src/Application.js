@@ -52,7 +52,7 @@ define([
 
 		this._server = new Server();
 		this._server.init();
-		this._server.listen(config.serverConfig.host, config.serverConfig.port);
+		this._server.listen(config.server.host, config.server.port);
 	};
 
 	Application.prototype._onReloading = function() {

@@ -13,7 +13,13 @@ define([
 
 	Config.ServerConfig = {
 		host: 'localhost',
-		port: 2222
+		port: 2222,
+		hostHistory: [
+			'localhost'
+		],
+		portHistory: [
+			2222
+		]
 	};
 	
 	Config.prototype.init = function() {
@@ -36,7 +42,8 @@ define([
 				continue;
 			}
 
-			type = key.substr(0, 1).toLowerCase() + key.substr(1);
+			// converts "MyDataConfig" to "myData"
+			type = (key.substr(0, 1).toLowerCase() + key.substr(1)).substr(0, key.length - 6);
 
 			log.info('create "' + type + '"');
 
@@ -64,13 +71,22 @@ define([
 	Config.prototype._makeObject = function(type, info) {
 		var config = {},
 			base = Config[type],
-			methods = this._getConfigObjectMethods();
+			methods = this._getConfigObjectMethods(),
+			key;
 
 		$.extend(config, base, info, methods);
 
-		Object.observe(config, function(changes) {
+		Object.observe(config, function(/*changes*/) {
 			config.save();
 		});
+
+		for (key in config) {
+			if (config[key] !== null && typeof config[key] === 'object') {
+				Object.observe(config[key], function(/*changes*/) {
+					config.save();
+				});
+			}
+		}
 
 		return config;
 	};

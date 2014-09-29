@@ -8,6 +8,8 @@ define([
 	'bootstrap',
 ], function(EventEmitter, React, logger, platform, $, ApplicationComponent) {
 	'use strict';
+
+	// http://facebook.github.io/react/html-jsx.html
 	
 	var log = logger.get('UserInterface');
 

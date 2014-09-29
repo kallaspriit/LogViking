@@ -4,10 +4,12 @@ define([
 ], function(logger, util) {
 	'use strict';
 
+	// provide dummy implementation on the browser
 	if (typeof require === 'undefined') {
 		return function() {
 			this.setRpcInterface = function() {};
 			this.listen = function() {};
+			this.stop = function() {};
 		};
 	}
 
