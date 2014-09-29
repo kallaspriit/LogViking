@@ -16,6 +16,8 @@ define([
 		},
 
 		render: function () {
+			log.info('render');
+
 			return (
 				<div>
 					<div className="navbar navbar-default navbar-fixed-top app-header" role="navigation">
@@ -30,7 +32,7 @@ define([
 								</div>
 								<button type="button" className="btn btn-link">Clear filter</button>
 							</form>
-							<ServerForm data={config.server} onListen={this.onServerListen}/>
+							<ServerForm data={config.server}/>
 						</div>
 					</div>
 
