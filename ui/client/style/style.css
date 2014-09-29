@@ -5,7 +5,7 @@
 	min-width: 850px;
 }
 .app-header {
-	border-top: 3px solid #900;
+	border-top: 3px solid #999;
 }
 .app-header,
 .app-footer {
@@ -205,22 +205,40 @@
 	left: 50%;
 	top: 0;
 	margin-left: -75px;
-	background-color: #900;
+	background-color: #999;
 	color: #FFF;
 	text-align: center;
-	border-left: 1px solid #E7E7E7;
-	border-bottom: 1px solid #E7E7E7;
-	border-right: 1px solid #E7E7E7;
 	border-radius: 0 0 4px 4px;
+	opacity: 1;
+	transition: top 500ms ease, opacity 500ms ease;
+	transition-delay: 1500ms;
 }
 @media only screen and (min-width : 1024px) {
 	.app-status {
 		display: block;
 	}
 }
-BODY.client-connected .app-header,
-BODY.client-connected .app-status {
-	background-color: #090;
+
+/* status colors */
+BODY.status-good .app-status {
+	background-color: #5CB85C;
+	top: -30px;
+	opacity: 0;
+}
+BODY.status-good .app-header {
+	border-top-color: #5CB85C;
+}
+BODY.status-warn .app-status {
+	background-color: #F0AD4E;
+}
+BODY.status-warn .app-header {
+	border-top-color: #F0AD4E;
+}
+BODY.status-bad .app-status {
+	background-color: #D9534F;
+}
+BODY.status-bad .app-header {
+	border-top-color: #D9534F;
 }
 
 /* logo */

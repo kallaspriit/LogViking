@@ -1,7 +1,8 @@
 define([
+	'src/EventEmitter',
 	'logviking/Logger',
 	'src/Util',
-], function(logger, util) {
+], function(EventEmitter, logger, util) {
 	'use strict';
 
 	// provide dummy implementation on the browser
@@ -19,6 +20,10 @@ define([
 				return this._started;
 			};
 
+			this.isClientConnected = function() {
+				return false;
+			};
+
 			this.stop = function() {
 				this._started = false;
 			};
@@ -30,12 +35,24 @@ define([
 		log = logger.get('WebSocketServer');
 
 	var WebSocketServer = function() {
+		EventEmitter.call(this);
+
 		this._socket = null;
 		this._started = false;
 		this._clients = [];
 		this._rpcInterface = null;
 		this._clientIdCounter = 0;
 		this._requestIdCounter = 0;
+	};
+
+	WebSocketServer.prototype = Object.create(EventEmitter.prototype);
+
+	WebSocketServer.Event = WebSocketServer.prototype.Event = {
+		STARTED: 'started',
+		STOPPED: 'stopped',
+		CLIENT_CONNECTED: 'client-connected',
+		CLIENT_DISCONNECTED: 'client-disconnected',
+		CLIENTS_CHANGED: 'clients-changed'
 	};
 
 	WebSocketServer.prototype.setRpcInterface = function(rpcInterface) {
@@ -58,6 +75,8 @@ define([
 		});
 
 		this._started = true;
+
+		this.emit(WebSocketServer.Event.STARTED);
 
 		this._socket.on('connection', function(client) {
 			this._clients.push(client);
@@ -153,6 +172,8 @@ define([
 				}
 
 				this._clients = newClients;
+
+				this._onClientDisconnected(client);
 			}.bind(this));
 
 			client.send = function(message) {
@@ -176,7 +197,7 @@ define([
 				return this.send.call(this.client, message);
 			}.bind({ client: client, send: client.send, log: this.log });
 
-			this.onClientConnected(client);
+			this._onClientConnected(client);
 		}.bind(this));
 	};
 
@@ -190,10 +211,25 @@ define([
 		this._socket.close();
 
 		this._started = false;
+		this._clients = [];
+
+		this.emit(WebSocketServer.Event.STOPPED);
 	};
 
 	WebSocketServer.prototype.isStarted = function() {
 		return this._started;
+	};
+
+	WebSocketServer.prototype.isClientConnected = function() {
+		if (!this.isStarted()) {
+			return false;
+		}
+
+		if (this._rpcInterface === null || typeof this._rpcInterface.isClientConnected  !== 'function') {
+			return false;
+		}
+
+		return this._rpcInterface.isClientConnected();
 	};
 
 	WebSocketServer.prototype.broadcast = function(message) {
@@ -210,7 +246,15 @@ define([
 		return this._clients;
 	};
 
-	WebSocketServer.prototype.onClientConnected = function() {};
+	WebSocketServer.prototype._onClientDisconnected = function(client) {
+		this.emit(WebSocketServer.Event.CLIENT_DISCONNECTED, client);
+		this.emit(WebSocketServer.Event.CLIENTS_CHANGED, this._clients);
+	};
+
+	WebSocketServer.prototype._onClientConnected = function(client) {
+		this.emit(WebSocketServer.Event.CLIENT_CONNECTED, client);
+		this.emit(WebSocketServer.Event.CLIENTS_CHANGED, this._clients);
+	};
 
 	return WebSocketServer;
 });

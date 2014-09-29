@@ -24,7 +24,7 @@ define([
 	 * @param {String} Event.ITEM_REMOVED Triggered when an item is removed.
 	 * @param {String} Event.CLEARED Triggered when storage is cleared.
 	 */
-	LocalStorage.prototype.Event = {
+	LocalStorage.Event = LocalStorage.prototype.Event = {
 		ITEM_ADDED: 'item-added',
 		ITEM_UPDATED: 'item-updated',
 		ITEM_REMOVED: 'item-removed',

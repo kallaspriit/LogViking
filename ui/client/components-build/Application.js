@@ -2,18 +2,15 @@
 define([
 	'React',
 	'components/ServerForm',
+	'components/StatusBar',
 	'logviking/Logger',
 	'src/Config'
-], function(React, ServerForm, logger, config) {
+], function(React, ServerForm, StatusBar, logger, config) {
 	'use strict';
 
 	var log = logger.get('ApplicationComponent');
 
 	var Application = React.createClass({displayName: 'Application',
-
-		onServerListen: function(host, port) {
-			log.info('onServerListen: ' + host + ':' + port);
-		},
 
 		render: function () {
 			log.info('render');
@@ -33,7 +30,7 @@ define([
 								React.DOM.button({type: "button", className: "btn btn-link"}, "Clear filter")
 							), 
 							ServerForm({data: config.server}), 
-							React.DOM.div({className: "app-status"}, "server stopped")
+							StatusBar(null)
 							/*<div className="app-logo">LogViking</div>*/
 						)
 					), 

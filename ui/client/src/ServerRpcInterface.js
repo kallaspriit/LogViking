@@ -18,6 +18,8 @@ define([
 	};
 
 	ServerRpcInterface.prototype.refresh = function() {
+		log.info('refreshing');
+
 		this._broadcastClients({
 			handler: 'refresh'
 		});
@@ -27,6 +29,38 @@ define([
 		log.info('requested to become client: ' + client.id);
 
 		this._listenerIds.push(client.id);
+	};
+
+	ServerRpcInterface.prototype.getClientCount = function() {
+		var clients = this._socketServer.getClients(),
+			clientCount = 0,
+			i;
+
+		for (i = 0; i < clients.length; i++) {
+			if (this._listenerIds.indexOf(clients[i].id) !== -1) {
+				clientCount++;
+			}
+		}
+
+		return clientCount;
+	};
+
+	ServerRpcInterface.prototype.getReporterCount = function() {
+		var clients = this._socketServer.getClients(),
+			reporterCount = 0,
+			i;
+
+		for (i = 0; i < clients.length; i++) {
+			if (this._listenerIds.indexOf(clients[i].id) === -1) {
+				reporterCount++;
+			}
+		}
+
+		return reporterCount;
+	};
+
+	ServerRpcInterface.prototype.isClientConnected = function() {
+		return this.getReporterCount() > 0;
 	};
 
 	ServerRpcInterface.prototype._broadcastClients = function(message) {

@@ -19,7 +19,7 @@ define([
 
 	UserInterface.prototype = Object.create(EventEmitter.prototype);
 
-	UserInterface.Event = {
+	UserInterface.Event = UserInterface.prototype.Event = {
 		RELOADING: 'reloading'
 	};
 
