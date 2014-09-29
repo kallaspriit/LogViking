@@ -32,7 +32,9 @@ define([
 								), 
 								React.DOM.button({type: "button", className: "btn btn-link"}, "Clear filter")
 							), 
-							ServerForm({data: config.server})
+							ServerForm({data: config.server}), 
+							React.DOM.div({className: "app-status"}, "server stopped")
+							/*<div className="app-logo">LogViking</div>*/
 						)
 					), 
 

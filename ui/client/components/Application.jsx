@@ -33,6 +33,8 @@ define([
 								<button type="button" className="btn btn-link">Clear filter</button>
 							</form>
 							<ServerForm data={config.server}/>
+							<div className="app-status">server stopped</div>
+							{/*<div className="app-logo">LogViking</div>*/}
 						</div>
 					</div>
 

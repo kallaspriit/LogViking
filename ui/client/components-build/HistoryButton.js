@@ -33,8 +33,6 @@ define([
 				value = this.props.source.transformValue(value);
 			}
 
-			log.info('text changed: ' + value);
-
 			this.setState({ text: value });
 		},
 
@@ -91,21 +89,19 @@ define([
 			}.bind(this));
 		
 			return (
-				React.DOM.div({className: "form-group"}, 
-					React.DOM.div({className: "btn-group"}, 
-						React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, 
-						labels.name, ": ", currentValue, " ", React.DOM.span({className: "caret"})
-						), 
-						React.DOM.ul({className: "dropdown-menu app-dropdown-with-buttons", role: "menu"}, 
-							optionNodes, 
-							optionNodes.length > 0 ? React.DOM.li({className: "divider"}) : '', 
-							React.DOM.li(null, 
-								React.DOM.div({className: "form-group"}, 
-									React.DOM.div({className: "input-group input-group-sm"}, 
-										React.DOM.input({type: "text", className: "form-control", placeholder: labels.placeholder, value: this.state.text, onChange: this.onTextChange}), 
-										React.DOM.span({className: "input-group-btn"}, 
-											React.DOM.button({className: "btn btn-default", type: "button", onClick: this.addOption}, "OK")
-										)
+				React.DOM.div({className: "btn-group"}, 
+					React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, 
+					labels.name, ": ", currentValue, " ", React.DOM.span({className: "caret"})
+					), 
+					React.DOM.ul({className: "dropdown-menu app-dropdown-with-buttons", role: "menu"}, 
+						optionNodes, 
+						optionNodes.length > 0 ? React.DOM.li({className: "divider"}) : '', 
+						React.DOM.li(null, 
+							React.DOM.div({className: "form-group"}, 
+								React.DOM.div({className: "input-group input-group-sm"}, 
+									React.DOM.input({type: "text", className: "form-control", placeholder: labels.placeholder, value: this.state.text, onChange: this.onTextChange}), 
+									React.DOM.span({className: "input-group-btn"}, 
+										React.DOM.button({className: "btn btn-default", type: "button", onClick: this.addOption}, "OK")
 									)
 								)
 							)

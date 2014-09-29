@@ -5,7 +5,7 @@ define([
 	'src/UserInterface',
 	'src/Server',
 	'src/Config'
-], function(logger, ConsoleLog, SocketLog, UserInterface, Server, config) {
+], function(logger, ConsoleLog, SocketLog, UserInterface, server, config) {
 	'use strict';
 
 	var log = logger.get('Application');
@@ -22,8 +22,8 @@ define([
 		log.info('bootstrapping');
 
 		this._setupConfig();
-		this._setupUserInterface();
 		this._setupServer();
+		this._setupUserInterface();
 	};
 
 	Application.prototype._setupLogger = function() {
@@ -50,7 +50,7 @@ define([
 	Application.prototype._setupServer = function() {
 		log.info('setup server');
 
-		this._server = new Server();
+		this._server = server;
 		this._server.init();
 		this._server.listen(config.server.host, config.server.port);
 	};

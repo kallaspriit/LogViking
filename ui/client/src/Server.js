@@ -35,6 +35,10 @@ define([
 		this._webSocketServer.stop();
 	};
 
+	Server.prototype.isStarted = function() {
+		return this._webSocketServer.isStarted();
+	};
+
 	Server.prototype._setupSocketServer = function() {
 		log.info('setup web socket server');
 
@@ -49,5 +53,5 @@ define([
 		this._webSocketServer.setRpcInterface(this._rpcInterface);
 	};
 
-    return Server;
+    return new Server();
 });

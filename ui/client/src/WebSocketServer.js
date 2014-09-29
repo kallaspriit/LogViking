@@ -7,9 +7,21 @@ define([
 	// provide dummy implementation on the browser
 	if (typeof require === 'undefined') {
 		return function() {
+			this._started = false;
+
 			this.setRpcInterface = function() {};
-			this.listen = function() {};
-			this.stop = function() {};
+
+			this.listen = function() {
+				this._started = true;
+			};
+
+			this.isStarted = function() {
+				return this._started;
+			};
+
+			this.stop = function() {
+				this._started = false;
+			};
 		};
 	}
 
@@ -176,6 +188,8 @@ define([
 		}
 
 		this._socket.close();
+
+		this._started = false;
 	};
 
 	WebSocketServer.prototype.isStarted = function() {

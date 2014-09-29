@@ -90,7 +90,7 @@ define([
 	};
 
 	UserInterface.prototype._onKeyDown = function(e) {
-		log.info('key down: ' + e.keyCode);
+		//log.info('key down: ' + e.keyCode);
 
 		switch (e.keyCode) {
 			case UserInterface.KeyCode.F5:

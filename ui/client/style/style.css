@@ -4,6 +4,13 @@
 .app-footer {
 	min-width: 850px;
 }
+.app-header {
+	border-top: 3px solid #900;
+}
+.app-header,
+.app-footer {
+	box-shadow: 0 0 10px #CCC;
+}
 
 /* app contents and navbar */
 .app-contents {
@@ -12,7 +19,7 @@
 	right: 0;
 	top: 50px;
 	bottom: 50px;
-	padding: 4px 0 0 0;
+	padding: 10px 0 0 0;
 	overflow: hidden;
 }
 .app-contents-header {
@@ -22,7 +29,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 92px;
+	top: 98px;
 	bottom: 0;
 	overflow: auto;
 }
@@ -118,6 +125,9 @@
 }
 
 /* server form */
+.app-server-form {
+	padding-right: 0;
+}
 .app-port {
 	width: 80px !important;
 }
@@ -158,7 +168,7 @@
 .app-clear-btn {
 	position: absolute;
 	right: 8px;
-	top: 6px;
+	top: 11px;
 }
 
 /* dropdown button */
@@ -187,20 +197,30 @@
 
 /* app status */
 .app-status {
+	display: none;
 	position: absolute;
-	width: 304px;
+	width: 150px;
 	height: 22px;
 	line-height: 17px;
-	/* left: 50%; */
-	top: 50px;
-	/* margin-left: -100px; */
-	background-color: #f8f8f8;
+	left: 50%;
+	top: 0;
+	margin-left: -75px;
+	background-color: #900;
+	color: #FFF;
 	text-align: center;
 	border-left: 1px solid #E7E7E7;
 	border-bottom: 1px solid #E7E7E7;
 	border-right: 1px solid #E7E7E7;
 	border-radius: 0 0 4px 4px;
-	right: 144px;
+}
+@media only screen and (min-width : 1024px) {
+	.app-status {
+		display: block;
+	}
+}
+BODY.client-connected .app-header,
+BODY.client-connected .app-status {
+	background-color: #090;
 }
 
 /* logo */

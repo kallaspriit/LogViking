@@ -2,8 +2,9 @@
 define([
 	'React',
 	'logviking/Logger',
+	'src/Server',
 	'components/HistoryButton'
-], function(React, logger, HistoryButton) {
+], function(React, logger, server, HistoryButton) {
 	'use strict';
 
 	var log = logger.get('ServerFormComponent');
@@ -23,7 +24,38 @@ define([
 			// TODO use selected host/port
 			log.info('listen', this.props.data.host, this.props.data.port);
 
+			if (server.isStarted()) {
+				server.stop();
+			}
+
+			server.listen(this.props.data.host, this.props.data.port);
+
+			this.forceUpdate();
+
 			e.preventDefault();
+		},
+
+		stop: function(e) {
+			// TODO use selected host/port
+			log.info('stop server');
+
+			if (server.isStarted()) {
+				server.stop();
+			}
+
+			this.forceUpdate();
+
+			e.preventDefault();
+		},
+
+		restartServer: function() {
+			log.info('restarting server');
+
+			if (server.isStarted()) {
+				server.stop();
+			}
+
+			server.listen(this.props.data.host, this.props.data.port);
 		},
 
 		render: function () {
@@ -49,6 +81,11 @@ define([
 						log.info('select host: "' + this.props.data.hostHistory[index] + '"');
 
 						this.props.data.host = this.props.data.hostHistory[index];
+
+						if (server.isStarted()) {
+							this.restartServer();
+							this.forceUpdate();
+						}
 					}.bind(this),
 
 					addOption: function(name) {
@@ -56,6 +93,8 @@ define([
 
 						this.props.data.hostHistory.push(name);
 						this.props.data.host = name;
+
+						this.restartServer();
 					}.bind(this),
 
 					removeOption: function(index) {
@@ -84,6 +123,11 @@ define([
 						log.info('select port: "' + this.props.data.portHistory[index] + '"');
 
 						this.props.data.port = this.props.data.portHistory[index];
+
+						if (server.isStarted()) {
+							this.restartServer();
+							this.forceUpdate();
+						}
 					}.bind(this),
 
 					addOption: function(name) {
@@ -91,6 +135,8 @@ define([
 
 						this.props.data.portHistory.push(name);
 						this.props.data.port = name;
+
+						this.restartServer();
 					}.bind(this),
 
 					removeOption: function(index) {
@@ -108,15 +154,19 @@ define([
 
 						return transformedValue;
 					}.bind(this)
-				};
+				},
+				started = server.isStarted(),
+				actionBtn = started
+					? React.DOM.button({type: "submit", className: "btn btn-primary", onClick: this.stop}, "Stop")
+					: React.DOM.button({type: "submit", className: "btn btn-primary", onClick: this.listen}, "Listen");
 
 			return (
-				React.DOM.form({className: "navbar-form navbar-right form-inline"}, 
-					HistoryButton({source: hostButtonSource}), 
-					' ', 
-					HistoryButton({source: portButtonSource}), 
-					' ', 
-					React.DOM.button({type: "submit", className: "btn btn-primary", onClick: this.listen}, "Listen")
+				React.DOM.form({className: "navbar-form navbar-right form-inline app-server-form"}, 
+					React.DOM.div({className: "btn-group"}, 
+						HistoryButton({source: hostButtonSource}), 
+						HistoryButton({source: portButtonSource}), 
+						actionBtn
+					)
 				)
 			);
 		}

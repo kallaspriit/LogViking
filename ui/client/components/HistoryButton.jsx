@@ -33,8 +33,6 @@ define([
 				value = this.props.source.transformValue(value);
 			}
 
-			log.info('text changed: ' + value);
-
 			this.setState({ text: value });
 		},
 
@@ -91,26 +89,24 @@ define([
 			}.bind(this));
 		
 			return (
-				<div className="form-group">
-					<div className="btn-group">
-						<button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{labels.name}: {currentValue} <span className="caret"></span>
-						</button>
-						<ul className="dropdown-menu app-dropdown-with-buttons" role="menu">
-							{optionNodes}
-							{optionNodes.length > 0 ? <li className="divider"></li> : ''}
-							<li>
-								<div className="form-group">
-									<div className="input-group input-group-sm">
-										<input type="text" className="form-control" placeholder={labels.placeholder} value={this.state.text} onChange={this.onTextChange}/>
-										<span className="input-group-btn">
-											<button className="btn btn-default" type="button" onClick={this.addOption}>OK</button>
-										</span>
-									</div>
+				<div className="btn-group">
+					<button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					{labels.name}: {currentValue} <span className="caret"></span>
+					</button>
+					<ul className="dropdown-menu app-dropdown-with-buttons" role="menu">
+						{optionNodes}
+						{optionNodes.length > 0 ? <li className="divider"></li> : ''}
+						<li>
+							<div className="form-group">
+								<div className="input-group input-group-sm">
+									<input type="text" className="form-control" placeholder={labels.placeholder} value={this.state.text} onChange={this.onTextChange}/>
+									<span className="input-group-btn">
+										<button className="btn btn-default" type="button" onClick={this.addOption}>OK</button>
+									</span>
 								</div>
-							</li>
-						</ul>
-					</div>
+							</div>
+						</li>
+					</ul>
 				</div>
 			);
 		}

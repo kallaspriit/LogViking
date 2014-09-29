@@ -17,13 +17,13 @@
   "window": {
     "title": "LogViking",
     "icon": "logo.png",
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "width": 1280,
-    "height": 650,
+    "height": 800,
     "position": "center",
-    "min_width": 600,
-    "min_height": 350
+    "min_width": 800,
+    "min_height": 600
   },
   "webkit": {
     "plugin": true,
