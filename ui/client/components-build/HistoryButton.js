@@ -8,6 +8,7 @@ define([
 	var log = logger.get('HistoryButtonComponent');
 
 	var HistoryButton = React.createClass({displayName: 'HistoryButton',
+
 		propTypes: {
 			source: React.PropTypes.shape({
 				getLabels: React.PropTypes.func.isRequired,

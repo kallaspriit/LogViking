@@ -6,7 +6,7 @@ define([
 	'jquery',
 	'components/Application',
 	'bootstrap',
-], function(EventEmitter, React, logger, platform, $, ApplicationComponent) {
+], function(EventEmitter, React, logger, platform, $, Application) {
 	'use strict';
 
 	// http://facebook.github.io/react/html-jsx.html
@@ -15,6 +15,8 @@ define([
 
 	var UserInterface = function() {
 		EventEmitter.call(this);
+
+		this._logEntries = null;
 	};
 
 	UserInterface.prototype = Object.create(EventEmitter.prototype);
@@ -28,8 +30,10 @@ define([
 		F12: 123
 	};
 
-	UserInterface.prototype.init = function() {
+	UserInterface.prototype.init = function(logEntries) {
 		log.info('init');
+
+		this._logEntries = logEntries;
 
 		this._setupKeyListeners();
 		this._setupApplication();
@@ -78,7 +82,7 @@ define([
 
 	UserInterface.prototype._setupApplication = function() {
 		React.renderComponent(
-			ApplicationComponent(null),
+			Application({ logEntries: this._logEntries }),
 			document.getElementById('application-wrap')
 		);
 	};

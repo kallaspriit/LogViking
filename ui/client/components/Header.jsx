@@ -11,14 +11,15 @@ define([
 	var log = logger.get('HeaderComponent');
 
 	var Header = React.createClass({
+
 		render: function () {
 			log.info('render');
 		
 			return (
 				<div className="navbar navbar-default navbar-fixed-top app-header" role="navigation">
 					<div className="container-fluid app-navbar-container">
-						<TypeFilter filters={this.props.data.typeFilter}/>
-						<ServerForm data={this.props.data.server}/>
+						<TypeFilter filters={this.props.config.typeFilter}/>
+						<ServerForm data={this.props.config.server}/>
 						<StatusBar/>
 						{/*<div className="app-logo">LogViking</div>*/}
 					</div>

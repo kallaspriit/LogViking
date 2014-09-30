@@ -53,7 +53,7 @@ define([
 
 				// TODO add <sup>2</sup> etc
 				buttons.push(
-					React.DOM.button({type: "button", className: btnClasses.join(' '), 'data-type': filterType, onClick: this.onFilterToggle}, filterType)
+					React.DOM.button({key: filterType, type: "button", className: btnClasses.join(' '), 'data-type': filterType, onClick: this.onFilterToggle}, filterType)
 				);
 			}
 		

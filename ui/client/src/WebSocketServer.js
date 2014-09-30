@@ -1,8 +1,9 @@
 define([
-	'src/EventEmitter',
 	'logviking/Logger',
+	'src/EventEmitter',
+	'src/ServerClient',
 	'src/Util',
-], function(EventEmitter, logger, util) {
+], function(logger, EventEmitter, ServerClient, util) {
 	'use strict';
 
 	// provide dummy implementation on the browser

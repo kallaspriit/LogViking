@@ -4,8 +4,9 @@ define([
 	'logviking/SocketLog',
 	'src/UserInterface',
 	'src/Server',
-	'src/Config'
-], function(logger, ConsoleLog, SocketLog, UserInterface, server, config) {
+	'src/Config',
+	'models/LogEntriesModel'
+], function(logger, ConsoleLog, SocketLog, UserInterface, server, config, LogEntriesModel) {
 	'use strict';
 
 	var log = logger.get('Application');
@@ -14,6 +15,7 @@ define([
 		this._config = config;
 		this._ui = null;
 		this._server = null;
+		this._logEntries = null;
 	};
 
 	Application.prototype.bootstrap = function() {
@@ -23,6 +25,7 @@ define([
 
 		this._setupConfig();
 		this._setupServer();
+		this._setupLogEntries();
 		this._setupUserInterface();
 	};
 
@@ -37,10 +40,16 @@ define([
 		config.init();
 	};
 
+	Application.prototype._setupLogEntries = function() {
+		log.info('setup log entries');
+
+		this._logEntries = new LogEntriesModel();
+	};
+
 	Application.prototype._setupUserInterface = function() {
 		log.info('setup user interface');
 
-		this._ui = new UserInterface();
+		this._ui = new UserInterface(this._logEntries);
 		this._ui.init();
 
 		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));

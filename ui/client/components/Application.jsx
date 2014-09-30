@@ -18,9 +18,9 @@ define([
 
 			return (
 				<div>
-					<Header data={config}/>
-					<Contents data={config}/>
-					<Footer data={config}/>
+					<Header config={config}/>
+					<Contents config={config} logEntries={this.props.logEntries}/>
+					<Footer config={config}/>
 				</div>
 			);
 		}

@@ -1,13 +1,22 @@
 define([
 	'logviking/Logger',
-], function(logger) {
+	'src/EventEmitter'
+], function(logger, EventEmitter) {
 	'use strict';
 
 	var log = logger.get('ServerRpcInterface');
 
 	var ServerRpcInterface = function(socketServer) {
+		EventEmitter.call(this);
+
 		this._socketServer = socketServer;
 		this._listenerIds = [];
+	};
+
+	ServerRpcInterface.prototype = Object.create(EventEmitter.prototype);
+
+	ServerRpcInterface.Event = ServerRpcInterface.prototype.Event = {
+		CLIENTS_CHANGED: 'clients-changed'
 	};
 
 	ServerRpcInterface.prototype.log = function(parameters) {
@@ -29,6 +38,8 @@ define([
 		log.info('requested to become client: ' + client.id);
 
 		this._listenerIds.push(client.id);
+
+		this.emit(ServerRpcInterface.Event.CLIENTS_CHANGED);
 	};
 
 	ServerRpcInterface.prototype.getClientCount = function() {
@@ -60,7 +71,7 @@ define([
 	};
 
 	ServerRpcInterface.prototype.isClientConnected = function() {
-		return this.getReporterCount() > 0;
+		return this.getReporterCount() > 0 && this.getClientCount() > 0;
 	};
 
 	ServerRpcInterface.prototype._broadcastClients = function(message) {

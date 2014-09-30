@@ -18,7 +18,7 @@
 	// handle node.js exceptions
 	if (typeof process !== 'undefined') {
 		process.on('uncaughtException', function (err) {
-			alert('exception: ' + err.message);
+			console.error('exception: ' + err.message);
 		});
 	}
 
@@ -33,6 +33,7 @@
 			src: 'src',
 			lib: 'lib',
 			components: 'components-build',
+			models: 'models',
 			logviking: 'lib/logviking',
 
 			// specific components

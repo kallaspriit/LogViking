@@ -53,7 +53,7 @@ define([
 
 				// TODO add <sup>2</sup> etc
 				buttons.push(
-					<button type="button" className={btnClasses.join(' ')} data-type={filterType} onClick={this.onFilterToggle}>{filterType}</button>
+					<button key={filterType} type="button" className={btnClasses.join(' ')} data-type={filterType} onClick={this.onFilterToggle}>{filterType}</button>
 				);
 			}
 		
