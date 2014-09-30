@@ -15,9 +15,13 @@
 	<script src="lib/requirejs/requirejs.js"></script>
 	<script>
 
-	/*process.on('uncaughtException', function (err) {
-   		alert('exception: ' + err.message);
-	});*/
+	// handle node.js exceptions
+	if (typeof process !== 'undefined') {
+		process.on('uncaughtException', function (err) {
+			alert('exception: ' + err.message);
+		});
+	}
+
 	// requirejs configuration
 	requirejs.config({
 		// base url for all resources

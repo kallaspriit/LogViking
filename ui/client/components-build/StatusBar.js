@@ -13,7 +13,8 @@ define([
 
 		getInitialState: function() {
 			return {
-				statusText: 'loading'
+				statusText: 'loading',
+				level: ''
 			}
 		},
 
@@ -22,45 +23,68 @@ define([
 				this.evaluate();
 			}.bind(this));
 
+			server.on(server.Event.ERROR, this.onServerError);
+
 			this.evaluate();
 		},
 
-		evaluate: function() {
+		evaluate: function(forceStatusText) {
 			log.info('evaluating state');
 
-			var newStatusText = this.state.statusText;
-
-			$(document.body).removeClass('status-good status-warn status-bad');
+			var newStatusText = this.state.statusText,
+				newLevel = this.state.level;
 
 			if (server.isStarted()) {
 				log.info('server started');
 
 				if (server.isClientConnected()) {
 					newStatusText = 'client connected';
-
-					$(document.body).addClass('status-good');
+					newLevel = 'good';
 				} else {
 					newStatusText = 'no client connected';
-
-					$(document.body).addClass('status-warn');
+					newLevel = 'warn';
 				}
 			} else {
 				log.info('server stopped');
 
 				newStatusText = 'server stopped';
-
-				$(document.body).addClass('status-bad');
+				newLevel = 'bad';
 			}
 
-			//if (newStatusText !== this.state.statusText) {
-				this.setState({
-					statusText: newStatusText
-				});
-			//}
+			if (typeof forceStatusText === 'string') {
+				newStatusText = forceStatusText;
+			}
+
+			this.setState({
+				statusText: newStatusText,
+				level: newLevel
+			});
+		},
+
+		onServerError: function(message, code) {
+			var statusText = 'Server error';
+
+			switch (code) {
+				case 'EADDRNOTAVAIL':
+					statusText = 'Invalid host/port';
+				break;
+
+				case 'EACCES':
+					statusText = 'Port not allowed';
+				break;
+			}
+
+			this.evaluate(statusText);
 		},
 
 		render: function () {
 			log.info('render');
+
+			$(document.body).removeClass('status-good status-warn status-bad');
+
+			if (this.state.level !== '') {
+				$(document.body).addClass('status-' + this.state.level);
+			}
 		
 			return (
 				React.DOM.div({className: "app-status"}, this.state.statusText)

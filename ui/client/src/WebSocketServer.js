@@ -27,6 +27,10 @@ define([
 			this.stop = function() {
 				this._started = false;
 			};
+
+			this.on = function() {};
+
+			this.Event = {};
 		};
 	}
 
@@ -52,7 +56,8 @@ define([
 		STOPPED: 'stopped',
 		CLIENT_CONNECTED: 'client-connected',
 		CLIENT_DISCONNECTED: 'client-disconnected',
-		CLIENTS_CHANGED: 'clients-changed'
+		CLIENTS_CHANGED: 'clients-changed',
+		ERROR: 'error'
 	};
 
 	WebSocketServer.prototype.setRpcInterface = function(rpcInterface) {
@@ -199,6 +204,19 @@ define([
 
 			this._onClientConnected(client);
 		}.bind(this));
+
+		this._socket.on('error', function(e) {
+			log.error('error: ' + e.message);
+
+			this._clients = [];
+
+			if (this._started) {
+				this._started = false;
+
+				this.emit(WebSocketServer.Event.STOPPED);
+				this.emit(WebSocketServer.Event.ERROR, e.message, e.code);
+			}
+		}.bind(this));
 	};
 
 	WebSocketServer.prototype.stop = function() {
@@ -208,7 +226,11 @@ define([
 			return;
 		}
 
-		this._socket.close();
+		try {
+			this._socket.close();
+		} catch (e) {
+			log.error('closing socket failed: ' + e.message);
+		}
 
 		this._started = false;
 		this._clients = [];

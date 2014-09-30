@@ -21,15 +21,7 @@ define([
 		},
 
 		listen: function(e) {
-			// TODO use selected host/port
-			log.info('listen', this.props.data.host, this.props.data.port);
-
-			if (server.isStarted()) {
-				server.stop();
-			}
-
-			server.listen(this.props.data.host, this.props.data.port);
-
+			this.restartServer();
 			this.forceUpdate();
 
 			e.preventDefault();
@@ -55,7 +47,19 @@ define([
 				server.stop();
 			}
 
-			server.listen(this.props.data.host, this.props.data.port);
+			log.info('listen', this.props.data.host, this.props.data.port);
+
+			try {
+				server.listen(this.props.data.host, this.props.data.port);
+			} catch (e) {
+				alert(e.message);
+			}
+		},
+
+		componentDidMount: function() {
+			server.on([server.Event.STARTED, server.Event.STOPPED, server.Event.CLIENTS_CHANGED], function() {
+				this.forceUpdate();
+			}.bind(this));
 		},
 
 		render: function () {
@@ -82,10 +86,7 @@ define([
 
 						this.props.data.host = this.props.data.hostHistory[index];
 
-						if (server.isStarted()) {
-							this.restartServer();
-							this.forceUpdate();
-						}
+						this.restartServer();
 					}.bind(this),
 
 					addOption: function(name) {
@@ -95,12 +96,15 @@ define([
 						this.props.data.host = name;
 
 						this.restartServer();
+						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
 						log.info('remove host: "' + this.props.data.hostHistory[index] + '"');
 
 						this.props.data.hostHistory.splice(index, 1);
+
+						this.forceUpdate();
 					}.bind(this)
 				},
 				portButtonSource = {
@@ -124,10 +128,7 @@ define([
 
 						this.props.data.port = this.props.data.portHistory[index];
 
-						if (server.isStarted()) {
-							this.restartServer();
-							this.forceUpdate();
-						}
+						this.restartServer();
 					}.bind(this),
 
 					addOption: function(name) {
@@ -137,12 +138,15 @@ define([
 						this.props.data.port = name;
 
 						this.restartServer();
+						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
 						log.info('remove port: "' + this.props.data.portHistory[index] + '"');
 
 						this.props.data.portHistory.splice(index, 1);
+
+						this.forceUpdate();
 					}.bind(this),
 
 					transformValue: function(value) {

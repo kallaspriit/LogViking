@@ -61,8 +61,6 @@ define([
 
 						this.props.source.selectOption(index);
 
-						this.forceUpdate();
-
 						e.preventDefault();
 						e.stopPropagation();
 					}.bind(this),
@@ -72,14 +70,12 @@ define([
 
 						this.props.source.removeOption(index);
 
-						this.forceUpdate();
-
 						e.preventDefault();
 						e.stopPropagation();
 					}.bind(this);
 
 				return (
-					<li>
+					<li key={index}>
 						<a href="#" onClick={selectOption}>{option}</a>
 						<button type="button" className="btn btn-link btn-sm app-dropdown-btn" title="Remove from history" onClick={removeOption}>
 							<span className="glyphicon glyphicon-remove"></span>

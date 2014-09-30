@@ -48,11 +48,16 @@ define([
 
 
 	Application.prototype._setupServer = function() {
-		log.info('setup server');
+		log.info('starting server on ' + config.server.host + ':' + config.server.port);
 
 		this._server = server;
 		this._server.init();
-		this._server.listen(config.server.host, config.server.port);
+
+		try {
+			this._server.listen(config.server.host, config.server.port);
+		} catch (e) {
+			log.error('starting server on ' + config.server.host + ':' + config.server.port + 'failed');
+		}
 	};
 
 	Application.prototype._onReloading = function() {
