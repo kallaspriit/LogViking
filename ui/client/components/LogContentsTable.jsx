@@ -9,7 +9,6 @@ define([
 	var log = logger.get('LogContentsTableComponent');
 
 	var LogContentsTable = React.createClass({
-
 		render: function () {
 			log.info('render', this.props.logEntries.length);
 

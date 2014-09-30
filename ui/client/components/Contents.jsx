@@ -12,7 +12,8 @@ define([
 
 		getInitialState: function() {
 			return {
-				logEntries: []
+				logEntries: [],
+				wasLogAtBottom: false
 			}
 		},
 
@@ -23,10 +24,29 @@ define([
 			);
 		},
 
+		componentDidUpdate: function() {
+			var contentsBody = this.refs.contentsBody.getDOMNode();
+
+			if (this.state.wasLogAtBottom) {
+				this.scrollToBottom(contentsBody);
+			}
+		},
+
 		validate: function(entry) {
+			var contentsBody = this.refs.contentsBody.getDOMNode();
+			
 			this.setState({
+				wasLogAtBottom: this.isAtBottom(contentsBody),
 				logEntries: this.props.logEntries.getFilteredEntries()
 			});
+		},
+
+		scrollToBottom: function(el) {
+			$(el).scrollTop(el.scrollHeight);
+		},
+
+		isAtBottom: function(el) {
+			return $(el).scrollTop() + $(el).innerHeight() >= el.scrollHeight;
 		},
 
 		render: function () {
@@ -133,7 +153,7 @@ define([
 							</thead>
 						</table>
 					</div>
-					<div className="app-contents-body">
+					<div className="app-contents-body" ref="contentsBody">
 						<LogContentsTable logEntries={this.state.logEntries}/>
 					</div>
 				</div>
