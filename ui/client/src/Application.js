@@ -24,8 +24,8 @@ define([
 		log.info('bootstrapping');
 
 		this._setupConfig();
-		this._setupServer();
 		this._setupLogEntries();
+		this._setupServer();
 		this._setupUserInterface();
 	};
 
@@ -46,27 +46,26 @@ define([
 		this._logEntries = new LogEntriesModel();
 	};
 
-	Application.prototype._setupUserInterface = function() {
-		log.info('setup user interface');
-
-		this._ui = new UserInterface(this._logEntries);
-		this._ui.init();
-
-		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));
-	};
-
-
 	Application.prototype._setupServer = function() {
 		log.info('starting server on ' + config.server.host + ':' + config.server.port);
 
 		this._server = server;
-		this._server.init();
+		this._server.init(this._logEntries);
 
 		try {
 			this._server.listen(config.server.host, config.server.port);
 		} catch (e) {
 			log.error('starting server on ' + config.server.host + ':' + config.server.port + 'failed');
 		}
+	};
+
+	Application.prototype._setupUserInterface = function() {
+		log.info('setup user interface');
+
+		this._ui = new UserInterface();
+		this._ui.init(this._logEntries);
+
+		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));
 	};
 
 	Application.prototype._onReloading = function() {

@@ -1,16 +1,13 @@
 define([
-	'logviking/Logger'
-], function(logger) {
+], function() {
 	'use strict';
-	
-	var log = logger.get('LogEntryModel');
 
-	var LogEntryModel = function() {
-	
-	};
-	
-	LogEntryModel.prototype.init = function() {
-		log.info('init');
+	var LogEntryModel = function(data) {
+		this.id = data.id;
+		this.date = data.date;
+		this.type = data.type;
+		this.component = data.component;
+		this.data = data.data;
 	};
 
     return LogEntryModel;

@@ -1,12 +1,10 @@
 define([
-], function(logger) {
+], function() {
 	'use strict';
 
-	var Formatter = function() {
+	var Formatter = function() {};
 	
-	};
-	
-	Formatter.prototype._formatParameters = function(value, level, undefined) {
+	Formatter.prototype.format = function(value, level, undefined) {
 		level = level || 0;
 
 		var result = '',
@@ -40,7 +38,8 @@ define([
 			return '<span class="value-number" title="number">' + value + '</span>';
 		} else if (typeof(value) === 'string') {
 			return '<span class="value-string" title="string">' +
-				(level > 1 ? '\'' : '') + value.replace('<', '&lt;').replace('>', '&gt;') + (level > 1 ? '\'' : '') + '</span>';
+				(level > 1 ? '\'' : '') + value.replace('<', '&lt;').replace('>', '&gt;') +
+				(level > 1 ? '\'' : '') + '</span>';
 		} else if (typeof(value) === 'function') {
 			return '<span class="value-function" title="function">[function]</span>';
 		} else if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -55,7 +54,7 @@ define([
 					result += ', ';
 				}
 
-				result += this._formatParameters(value[i], level + 1);
+				result += this.format(value[i], level + 1);
 			}
 
 			if (level > 0) {
@@ -72,7 +71,7 @@ define([
 					result += ', ';
 				}
 
-				result += this._formatParameters(key, level + 1) + ': ' + this._formatParameters(value[key], level + 1);
+				result += this.format(key, level + 1) + ': ' + this.format(value[key], level + 1);
 
 				i++;
 			}
@@ -111,5 +110,5 @@ define([
 		return this._formatDate(date, true) + ' ' + this._formatTime(date);
 	};
 	
-    return Formatter;
+    return new Formatter();
 });

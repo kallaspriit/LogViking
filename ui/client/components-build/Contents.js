@@ -9,6 +9,26 @@ define([
 	var log = logger.get('ContentsComponent');
 
 	var Contents = React.createClass({displayName: 'Contents',
+
+		getInitialState: function() {
+			return {
+				logEntries: []
+			}
+		},
+
+		componentDidMount: function() {
+			this.props.logEntries.on(
+				[this.props.logEntries.Event.ENTRY_ADDED, this.props.logEntries.Event.CLEARED],
+				this.validate
+			);
+		},
+
+		validate: function(entry) {
+			this.setState({
+				logEntries: this.props.logEntries.getFilteredEntries()
+			});
+		},
+
 		render: function () {
 			log.info('render');
 		
@@ -114,7 +134,7 @@ define([
 						)
 					), 
 					React.DOM.div({className: "app-contents-body"}, 
-						LogContentsTable({logEntries: this.props.logEntries})
+						LogContentsTable({logEntries: this.state.logEntries})
 					)
 				)
 			);

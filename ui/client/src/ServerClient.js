@@ -1,7 +1,8 @@
 define([
 	'logviking/Logger',
-	'src/EventEmitter'
-], function(logger, EventEmitter) {
+	'src/EventEmitter',
+	'models/LogEntryModel'
+], function(logger, EventEmitter, LogEntryModel) {
 	'use strict';
 	
 	var log = logger.get('ServerClient');
@@ -11,12 +12,14 @@ define([
 
 		this._ws = null;
 		this._requestCount = 0;
+		this._entryCount = 0;
 	};
 
 	ServerClient.prototype = Object.create(EventEmitter.prototype);
 
 	ServerClient.Event = ServerClient.prototype.Event = {
-		LOG_ENTRY_RECEIVED: 'log-entry-received'
+		LOG_ENTRY_RECEIVED: 'log-entry-received',
+		REFRESH_REQUESTED: 'refresh-requested'
 	};
 	
 	ServerClient.prototype.connect = function(host, port) {
@@ -51,8 +54,6 @@ define([
 			return;
 		}
 
-		log.info('received message for handler called "' + payload.handler + '"');
-
 		switch (payload.handler) {
 			case 'log':
 				this._handleLog(payload.info);
@@ -69,16 +70,17 @@ define([
 	};
 
 	ServerClient.prototype._handleLog = function(info) {
-		var date = new Date(info.date),
-			entry = {
+		var entryId = this._entryCount++,
+			date = new Date(info.date),
+			entry = new LogEntryModel({
+				id: entryId,
 				date: date,
 				type: info.type,
 				component: info.component,
-				//data: this._formatParameters(info.parameters)
 				data: info.parameters
-			};
+			});
 
-		log.info('handle log entry', entry);
+		//log.info('handle log entry', entry);
 
 		this.emit(ServerClient.Event.LOG_ENTRY_RECEIVED, entry);
 	};
@@ -86,7 +88,7 @@ define([
 	ServerClient.prototype._handleRefresh = function() {
 		log.info('handle refresh');
 
-		//this._clear();
+		this.emit(ServerClient.Event.REFRESH_REQUESTED);
 	};
 
 	ServerClient.prototype._isConnectionValid = function() {

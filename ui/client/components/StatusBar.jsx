@@ -72,6 +72,10 @@ define([
 				case 'EACCES':
 					statusText = 'Port not allowed';
 				break;
+
+				case 'EADDRINUSE':
+					statusText = 'Host/port in use';
+				break;
 			}
 
 			this.evaluate(statusText);
