@@ -21,6 +21,14 @@ define([
 			2222
 		]
 	};
+
+	Config.TypeFilterConfig = {
+		log: true,
+		info: true,
+		warn: true,
+		error: true,
+		javascript: true
+	};
 	
 	Config.prototype.init = function() {
 		log.info('init');

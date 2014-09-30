@@ -257,3 +257,10 @@ BODY.status-bad .app-header {
 	line-height: 80px;
 	font-size: 32px;
 }
+
+/* override bootstrap */
+/*.btn-default:focus {
+	color: inherit;
+	background-color: inherit;
+	border-color: #CCC;
+}*/
