@@ -34,7 +34,7 @@ define([
 
 		validate: function(entry) {
 			var contentsBody = this.refs.contentsBody.getDOMNode();
-			
+
 			this.setState({
 				wasLogAtBottom: this.isAtBottom(contentsBody),
 				logEntries: this.props.logEntries.getFilteredEntries()
@@ -60,7 +60,7 @@ define([
 					), 
 
 					React.DOM.div({className: "app-content-header"}, 
-						React.DOM.table({className: "table table-hover"}, 
+						React.DOM.table({id: "log-table-header", className: "table table-hover"}, 
 							React.DOM.thead(null, 
 								React.DOM.tr(null, 
 									React.DOM.th({className: "app-table-time"}, "Time"), 

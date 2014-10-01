@@ -1,7 +1,13 @@
-define([
-], function() {
+define(function() {
 	'use strict';
 
+	/**
+	 * Logs data to a websocket.
+	 *
+	 * @class SocketLog
+	 * @constructor
+	 * @module Core
+	 */
 	var SocketLog = function(host, port) {
 		this._ws = null;
 
@@ -37,7 +43,11 @@ define([
 			clone;
 
 		try {
-			clone = JSON.parse(JSON.stringify(parameters));
+			if (parameters !== null && typeof parameters === 'object' && !Array.isArray(parameters)) {
+				clone = jQuery.extend(true, {}, parameters);
+			} else {
+				clone = parameters;
+			}
 		} catch (e) {
 			return;
 		}

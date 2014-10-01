@@ -109,6 +109,13 @@
 .app-log-table TR.app-entry-javascript:hover TD {
 	background-color: #dff0d8;
 }
+.app-layout-row TD {
+	height: 1px !important;
+	line-height: 1px !important;
+	padding: 0 !important;
+	border: 0px !important;
+	overflow: hidden;
+}
 
 /* type filter badges */
 .app-type-filter .badge {
@@ -258,9 +265,40 @@ BODY.status-bad .app-header {
 	font-size: 32px;
 }
 
-/* override bootstrap */
-/*.btn-default:focus {
-	color: inherit;
-	background-color: inherit;
-	border-color: #CCC;
-}*/
+/* formatter types */
+.value-string {
+	font-style: normal;
+	color: #000;
+}
+.value-null {
+	font-style: italic;
+	color: #090;
+}
+.value-undefined {
+	font-style: italic;
+	color: #F00;
+}
+.value-number {
+	font-style: italic;
+	color: #009;
+}
+.value-date {
+	font-style: italic;
+	color: #990;
+}
+.value-boolean {
+	font-style: italic;
+	color: #900;
+}
+.value-function {
+	font-style: italic;
+	color: #099;
+}
+.value-object {
+	font-style: italic;
+	color: #333;
+}
+.value-array {
+	font-style: italic;
+	color: #333;
+}
