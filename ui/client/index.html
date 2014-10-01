@@ -19,8 +19,15 @@
 	if (typeof process !== 'undefined') {
 		process.on('uncaughtException', function (err) {
 			console.error('exception: ' + err.message);
+
+			window.app.stopServer();
 		});
 	}
+
+	// stop server on unload
+	window.onunload = function() {
+		window.app.stopServer();
+	};
 
 	// requirejs configuration
 	requirejs.config({

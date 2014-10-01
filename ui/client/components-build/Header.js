@@ -1,11 +1,11 @@
 /** @jsx React.DOM */
 define([
 	'React',
+	'logviking/Logger',
 	'components/ServerForm',
 	'components/StatusBar',
-	'components/TypeFilter',
-	'logviking/Logger'
-], function(React, ServerForm, StatusBar, TypeFilter, logger) {
+	'components/TypeFilter'
+], function(React, logger, ServerForm, StatusBar, TypeFilter) {
 	'use strict';
 	
 	var log = logger.get('HeaderComponent');

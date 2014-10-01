@@ -54,36 +54,34 @@ define([
 			var currentValue = this.props.source.getCurrentValue(),
 				options = this.props.source.getOptions(),
 				labels = this.props.source.getLabels(),
-				optionNodes;
+				optionNodes = options.map(function(option, index) {
+					var selectOption = function(e) {
+							log.info('selecting option: ' + option);
 
-			optionNodes = options.map(function(option, index) {
-				var selectOption = function(e) {
-						log.info('selecting option: ' + option);
+							this.props.source.selectOption(index);
 
-						this.props.source.selectOption(index);
+							e.preventDefault();
+							e.stopPropagation();
+						}.bind(this),
 
-						e.preventDefault();
-						e.stopPropagation();
-					}.bind(this),
+						removeOption = function(e) {
+							log.info('remove host history item: ' + option);
 
-					removeOption = function(e) {
-						log.info('remove host history item: ' + option);
+							this.props.source.removeOption(index);
 
-						this.props.source.removeOption(index);
+							e.preventDefault();
+							e.stopPropagation();
+						}.bind(this);
 
-						e.preventDefault();
-						e.stopPropagation();
-					}.bind(this);
-
-				return (
-					React.DOM.li({key: index}, 
-						React.DOM.a({href: "#", onClick: selectOption}, option), 
-						React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn", title: "Remove from history", onClick: removeOption}, 
-							React.DOM.span({className: "glyphicon glyphicon-remove"})
+					return (
+						React.DOM.li({key: index}, 
+							React.DOM.a({href: "#", onClick: selectOption}, option), 
+							React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn", title: "Remove from history", onClick: removeOption}, 
+								React.DOM.span({className: "glyphicon glyphicon-remove"})
+							)
 						)
-					)
-				);
-			}.bind(this));
+					);
+				}.bind(this));
 		
 			return (
 				React.DOM.div({className: "btn-group"}, 

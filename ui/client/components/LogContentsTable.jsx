@@ -14,7 +14,7 @@ define([
 		componentDidMount: function() {
 			this.updateTableColumnWidths();
 
-			$(window).resize(this.updateTableColumnWidths.bind(this));
+			$(window).resize(this.updateTableColumnWidths);
 		},
 
 		updateTableColumnWidths: function() {

@@ -1,12 +1,12 @@
 /** @jsx React.DOM */
 define([
 	'React',
+	'logviking/Logger',
+	'src/State',
 	'components/Header',
 	'components/Contents',
-	'components/Footer',
-	'logviking/Logger',
-	'src/State'
-], function(React, Header, Contents, Footer, logger, state) {
+	'components/Footer'
+], function(React, logger, state, Header, Contents, Footer) {
 	'use strict';
 
 	var log = logger.get('ApplicationComponent');

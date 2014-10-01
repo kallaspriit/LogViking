@@ -39,6 +39,13 @@ define([
 			eventHub.emit(eventHub.Change.TYPE_FILTER);
 		}
 	};
+
+	State.ContentFilterState = {
+		component: {
+			value: '',
+			history: []
+		}
+	};
 	
 	State.prototype.init = function() {
 		log.info('init');
@@ -78,6 +85,20 @@ define([
 		info._state = this;
 		info._type = type;
 
+		/*Object.defineProperty(info, '_state', {
+			enumerable: false,
+			configurable: true,
+			writable: true,
+			value: this
+		});
+
+		Object.defineProperty(info, '_type', {
+			enumerable: false,
+			configurable: true,
+			writable: true,
+			value: type
+		});*/
+
 		return this._makeObject(type, info);
 	};
 
@@ -90,35 +111,39 @@ define([
 	State.prototype._makeObject = function(type, info) {
 		var state = {},
 			base = State[type],
-			methods = this._getStateObjectMethods(),
-			key;
+			methods = this._getStateObjectMethods();
 
 		$.extend(state, base, info, methods);
 
-		Object.observe(state, function(/*changes*/) {
-			state.save();
-		});
-
-		for (key in state) {
-			if (state[key] !== null && typeof state[key] === 'object') {
-				Object.observe(state[key], function(/*changes*/) {
-					state.save();
-				});
-			}
-		}
+		this._callOnChange(state, function(/*changes*/) {
+			this.state.save();
+		}.bind({state: state}));
 
 		return state;
 	};
 
+	State.prototype._callOnChange = function(obj, callback) {
+		var key;
+
+		Object.observe(obj, callback);
+
+		for (key in obj) {
+			if (key.substr(0, 1) !== '_' && obj[key] !== null && typeof obj[key] === 'object') {
+				this._callOnChange(obj[key], callback);
+			}
+		}
+	};
+
 	State.prototype._getStateObjectMethods = function() {
-		return {
-			save: function() {
+		var methods = {
+			save: function () {
 				this._state._store(this._type, this.getData());
 
 				if (typeof this.onChange === 'function') {
 					this.onChange.call(this);
 				}
 			},
+
 			getData: function() {
 				var data = {},
 					key,
@@ -137,6 +162,40 @@ define([
 				return data;
 			}
 		};
+
+		/*Object.defineProperty(methods, 'save', {
+			//enumerable: false,
+			value: function () {
+				this._state._store(this._type, this.getData());
+
+				if (typeof this.onChange === 'function') {
+					this.onChange.call(this);
+				}
+			}
+		});
+
+		Object.defineProperty(methods, 'getData', {
+			enumerable: false,
+			value: function() {
+				var data = {},
+					key,
+					value;
+
+				for (key in this) {
+					value = this[key];
+
+					if (key.substr(0, 1) === '_' || typeof value === 'function') {
+						continue;
+					}
+
+					data[key] = value;
+				}
+
+				return data;
+			}
+		});*/
+
+		return methods;
 	};
 
     return new State();

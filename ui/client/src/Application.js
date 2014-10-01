@@ -26,6 +26,14 @@ define([
 		this._setupUserInterface();
 	};
 
+	Application.prototype.stopServer = function() {
+		if (this._server === null || !this._server.isStarted()) {
+			return;
+		}
+
+		this._server.stop();
+	};
+
 	Application.prototype._setupLogger = function() {
 		logger.addReporter(new ConsoleLog());
 		//logger.addReporter(new SocketLog('localhost', 2222));
