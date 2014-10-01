@@ -9,6 +9,19 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
+		// https://github.com/gruntjs/grunt-contrib-jshint
+		jshint: {
+			ui: {
+				options: {
+					jshintrc: '../client/.jshintrc',
+				},
+				src: [
+					'../client/src/**/*.js',
+					//'../client/components-build/**/*.js'
+				]
+			}
+		},
+
 		// https://github.com/gruntjs/grunt-contrib-compress
 		compress: {
 			build: {

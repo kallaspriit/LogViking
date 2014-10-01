@@ -1,8 +1,9 @@
 define([
 	'logviking/Logger',
 	'models/LogEntryModel',
-	'src/EventEmitter'
-], function(logger, LogEntryModel, EventEmitter) {
+	'src/EventEmitter',
+	'src/EventHub'
+], function(logger, LogEntryModel, EventEmitter, eventHub) {
 	'use strict';
 	
 	var log = logger.get('LogEntriesModel');
@@ -26,6 +27,7 @@ define([
 		this.entries.push(logEntry);
 
 		this.emit(LogEntriesModel.Event.ENTRY_ADDED, logEntry);
+		eventHub.emit(eventHub.Change.LOG_ENTRIES);
 	};
 
 	LogEntriesModel.prototype.clear = function() {
@@ -34,6 +36,7 @@ define([
 		this.entries = [];
 
 		this.emit(LogEntriesModel.Event.CLEARED);
+		eventHub.emit(eventHub.Change.LOG_ENTRIES);
 	};
 
 	LogEntriesModel.prototype.getFilteredEntries = function() {

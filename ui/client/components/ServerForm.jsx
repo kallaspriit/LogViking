@@ -4,17 +4,17 @@ define([
 	'logviking/Logger',
 	'src/Server',
 	'src/State',
+	'src/EventHub',
 	'components/HistoryButton'
-], function(React, logger, server, state, HistoryButton) {
+], function(React, logger, server, state, eventHub, HistoryButton) {
 	'use strict';
 
 	var log = logger.get('ServerFormComponent');
 
 	var ServerForm = React.createClass({
-		
+
 		listen: function(e) {
 			this.restartServer();
-			this.forceUpdate();
 
 			e.preventDefault();
 		},
@@ -26,8 +26,6 @@ define([
 			if (server.isStarted()) {
 				server.stop();
 			}
-
-			this.forceUpdate();
 
 			e.preventDefault();
 		},
@@ -43,13 +41,15 @@ define([
 
 			try {
 				server.listen(state.server.host, state.server.port);
-			} catch (e) {
-				alert(e.message);
-			}
+			} catch (e) {}
 		},
 
 		componentDidMount: function() {
 			server.on([server.Event.STARTED, server.Event.STOPPED, server.Event.CLIENTS_CHANGED], function() {
+				eventHub.emit(eventHub.Change.SERVER);
+			}.bind(this));
+
+			eventHub.on(eventHub.Change.SERVER, function() {
 				this.forceUpdate();
 			}.bind(this));
 		},
@@ -88,15 +88,12 @@ define([
 						state.server.host = name;
 
 						this.restartServer();
-						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
 						log.info('remove host: "' + state.server.hostHistory[index] + '"');
 
 						state.server.hostHistory.splice(index, 1);
-
-						this.forceUpdate();
 					}.bind(this)
 				},
 				portButtonSource = {
@@ -130,15 +127,12 @@ define([
 						state.server.port = name;
 
 						this.restartServer();
-						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
 						log.info('remove port: "' + state.server.portHistory[index] + '"');
 
 						state.server.portHistory.splice(index, 1);
-
-						this.forceUpdate();
 					}.bind(this),
 
 					transformValue: function(value) {

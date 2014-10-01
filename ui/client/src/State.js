@@ -1,8 +1,9 @@
 define([
 	'jquery',
 	'logviking/Logger',
-	'src/LocalStorage'
-], function($, logger, LocalStorage) {
+	'src/LocalStorage',
+	'src/EventHub'
+], function($, logger, LocalStorage, eventHub) {
 	'use strict';
 	
 	var log = logger.get('State');
@@ -20,7 +21,11 @@ define([
 		],
 		portHistory: [
 			2222
-		]
+		],
+
+		onChange: function() {
+			eventHub.emit(eventHub.Change.SERVER);
+		}
 	};
 
 	State.TypeFilterState = {
@@ -28,7 +33,11 @@ define([
 		info: true,
 		warn: true,
 		error: true,
-		javascript: true
+		javascript: true,
+
+		onChange: function() {
+			eventHub.emit(eventHub.Change.TYPE_FILTER);
+		}
 	};
 	
 	State.prototype.init = function() {
@@ -105,6 +114,10 @@ define([
 		return {
 			save: function() {
 				this._state._store(this._type, this.getData());
+
+				if (typeof this.onChange === 'function') {
+					this.onChange.call(this);
+				}
 			},
 			getData: function() {
 				var data = {},

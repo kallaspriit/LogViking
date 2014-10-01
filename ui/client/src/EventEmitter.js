@@ -196,8 +196,21 @@ function() {
 			}
 		}
 
+		this._onEmit(event, propagate);
+
 		return propagate;
 	};
+
+	/**
+	 * Called on every emitted event.
+	 *
+	 * Useful for debugging.
+	 *
+	 * @method _onEmit
+	 * @param {Object} event Event info
+	 * @param {Boolean} shouldPropagate Should the event propagate
+	 */
+	EventEmitter.prototype._onEmit = function(/*event, shouldPropagate*/) {};
 
 	/**
 	 * Returns the number of event listeners of given type.

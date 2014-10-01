@@ -78,7 +78,7 @@ define([
 
 	UserInterface.prototype._setupApplication = function() {
 		React.renderComponent(
-			Application(null),
+			new Application(null),
 			document.getElementById('application-wrap')
 		);
 	};

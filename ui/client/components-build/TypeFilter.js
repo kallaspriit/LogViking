@@ -3,8 +3,9 @@ define([
 	'jquery',
 	'logviking/Logger',
 	'React',
-	'src/State'
-], function($, logger, React, state) {
+	'src/State',
+	'src/EventHub'
+], function($, logger, React, state, eventHub) {
 	'use strict';
 	
 	var log = logger.get('TypeFilterComponent');
@@ -17,8 +18,12 @@ define([
 			state.typeFilter[type] = !state.typeFilter[type]
 
 			$(e.currentTarget).blur();
+		},
 
-			this.forceUpdate();
+		componentDidMount: function() {
+			eventHub.on(eventHub.Change.TYPE_FILTER, function() {
+				this.forceUpdate();
+			}.bind(this));
 		},
 
 		render: function () {

@@ -56,7 +56,7 @@ define([
 		logEntries.add(logEntry);
 	};
 
-	Server.prototype._onRefreshRequested = function(logEntry) {
+	Server.prototype._onRefreshRequested = function() {
 		logEntries.clear();
 	};
 
