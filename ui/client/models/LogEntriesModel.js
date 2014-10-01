@@ -40,5 +40,5 @@ define([
 		return this.entries; // TODO filter
 	};
 
-    return LogEntriesModel;
+    return new LogEntriesModel();
 });

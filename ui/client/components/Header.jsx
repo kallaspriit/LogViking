@@ -18,8 +18,8 @@ define([
 			return (
 				<div className="navbar navbar-default navbar-fixed-top app-header" role="navigation">
 					<div className="container-fluid app-navbar-container">
-						<TypeFilter filters={this.props.config.typeFilter}/>
-						<ServerForm data={this.props.config.server}/>
+						<TypeFilter/>
+						<ServerForm/>
 						<StatusBar/>
 						{/*<div className="app-logo">LogViking</div>*/}
 					</div>

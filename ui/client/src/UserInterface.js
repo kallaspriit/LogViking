@@ -15,8 +15,6 @@ define([
 
 	var UserInterface = function() {
 		EventEmitter.call(this);
-
-		this._logEntries = null;
 	};
 
 	UserInterface.prototype = Object.create(EventEmitter.prototype);
@@ -30,10 +28,8 @@ define([
 		F12: 123
 	};
 
-	UserInterface.prototype.init = function(logEntries) {
+	UserInterface.prototype.init = function() {
 		log.info('init');
-
-		this._logEntries = logEntries;
 
 		this._setupKeyListeners();
 		this._setupApplication();
@@ -82,7 +78,7 @@ define([
 
 	UserInterface.prototype._setupApplication = function() {
 		React.renderComponent(
-			Application({ logEntries: this._logEntries }),
+			Application(null),
 			document.getElementById('application-wrap')
 		);
 	};

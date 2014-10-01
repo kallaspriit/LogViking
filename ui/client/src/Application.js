@@ -4,18 +4,16 @@ define([
 	'logviking/SocketLog',
 	'src/UserInterface',
 	'src/Server',
-	'src/Config',
-	'models/LogEntriesModel'
-], function(logger, ConsoleLog, SocketLog, UserInterface, server, config, LogEntriesModel) {
+	'src/State'
+], function(logger, ConsoleLog, SocketLog, UserInterface, server, state) {
 	'use strict';
 
 	var log = logger.get('Application');
 
 	var Application = function() {
-		this._config = config;
+		this._state = state;
 		this._ui = null;
 		this._server = null;
-		this._logEntries = null;
 	};
 
 	Application.prototype.bootstrap = function() {
@@ -24,7 +22,6 @@ define([
 		log.info('bootstrapping');
 
 		this._setupConfig();
-		this._setupLogEntries();
 		this._setupServer();
 		this._setupUserInterface();
 	};
@@ -37,25 +34,19 @@ define([
 	Application.prototype._setupConfig = function() {
 		log.info('setup config');
 
-		config.init();
-	};
-
-	Application.prototype._setupLogEntries = function() {
-		log.info('setup log entries');
-
-		this._logEntries = new LogEntriesModel();
+		this._state.init();
 	};
 
 	Application.prototype._setupServer = function() {
-		log.info('starting server on ' + config.server.host + ':' + config.server.port);
+		log.info('starting server on ' + state.server.host + ':' + state.server.port);
 
 		this._server = server;
-		this._server.init(this._logEntries);
+		this._server.init();
 
 		try {
-			this._server.listen(config.server.host, config.server.port);
+			this._server.listen(state.server.host, state.server.port);
 		} catch (e) {
-			log.error('starting server on ' + config.server.host + ':' + config.server.port + 'failed');
+			log.error('starting server on ' + state.server.host + ':' + state.server.port + 'failed');
 		}
 	};
 
@@ -63,7 +54,7 @@ define([
 		log.info('setup user interface');
 
 		this._ui = new UserInterface();
-		this._ui.init(this._logEntries);
+		this._ui.init();
 
 		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));
 	};

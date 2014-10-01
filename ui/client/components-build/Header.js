@@ -18,8 +18,8 @@ define([
 			return (
 				React.DOM.div({className: "navbar navbar-default navbar-fixed-top app-header", role: "navigation"}, 
 					React.DOM.div({className: "container-fluid app-navbar-container"}, 
-						TypeFilter({filters: this.props.config.typeFilter}), 
-						ServerForm({data: this.props.config.server}), 
+						TypeFilter(null), 
+						ServerForm(null), 
 						StatusBar(null)
 						/*<div className="app-logo">LogViking</div>*/
 					)

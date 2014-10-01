@@ -5,8 +5,8 @@ define([
 	'components/Contents',
 	'components/Footer',
 	'logviking/Logger',
-	'src/Config'
-], function(React, Header, Contents, Footer, logger, config) {
+	'src/State'
+], function(React, Header, Contents, Footer, logger, state) {
 	'use strict';
 
 	var log = logger.get('ApplicationComponent');
@@ -18,9 +18,9 @@ define([
 
 			return (
 				React.DOM.div(null, 
-					Header({config: config}), 
-					Contents({config: config, logEntries: this.props.logEntries}), 
-					Footer({config: config})
+					Header(null), 
+					Contents(null), 
+					Footer(null)
 				)
 			);
 		}

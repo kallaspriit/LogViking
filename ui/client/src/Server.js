@@ -4,7 +4,8 @@ define([
 	'src/WebSocketServer',
 	'src/ServerClient',
 	'src/ServerRpcInterface',
-], function(logger, EventEmitter, WebSocketServer, ServerClient, ServerRpcInterface) {
+	'models/LogEntriesModel'
+], function(logger, EventEmitter, WebSocketServer, ServerClient, ServerRpcInterface, logEntries) {
 	'use strict';
 
 	var log = logger.get('Server');
@@ -14,15 +15,12 @@ define([
 
 		this._rpcInterface = null;
 		this._serverClient = null;
-		this._logEntries = null;
 	};
 
 	Server.prototype = Object.create(WebSocketServer.prototype);
 
-	Server.prototype.init = function(logEntries) {
+	Server.prototype.init = function() {
 		log.info('init');
-
-		this._logEntries = logEntries;
 
 		this._setupServerClient();
 		this._setupRpcInterface();
@@ -55,11 +53,11 @@ define([
 	};
 
 	Server.prototype._onLogEntryReceived = function(logEntry) {
-		this._logEntries.add(logEntry);
+		logEntries.add(logEntry);
 	};
 
 	Server.prototype._onRefreshRequested = function(logEntry) {
-		this._logEntries.clear();
+		logEntries.clear();
 	};
 
     return new Server();

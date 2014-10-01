@@ -3,23 +3,15 @@ define([
 	'React',
 	'logviking/Logger',
 	'src/Server',
+	'src/State',
 	'components/HistoryButton'
-], function(React, logger, server, HistoryButton) {
+], function(React, logger, server, state, HistoryButton) {
 	'use strict';
 
 	var log = logger.get('ServerFormComponent');
 
 	var ServerForm = React.createClass({
-
-		propTypes: {
-			data: React.PropTypes.shape({
-				host: React.PropTypes.string.isRequired,
-				port: React.PropTypes.number.isRequired,
-				hostHistory: React.PropTypes.array.isRequired,
-				portHistory: React.PropTypes.array.isRequired
-			}).isRequired
-		},
-
+		
 		listen: function(e) {
 			this.restartServer();
 			this.forceUpdate();
@@ -47,10 +39,10 @@ define([
 				server.stop();
 			}
 
-			log.info('listen', this.props.data.host, this.props.data.port);
+			log.info('listen', state.server.host, state.server.port);
 
 			try {
-				server.listen(this.props.data.host, this.props.data.port);
+				server.listen(state.server.host, state.server.port);
 			} catch (e) {
 				alert(e.message);
 			}
@@ -74,17 +66,17 @@ define([
 					}.bind(this),
 
 					getCurrentValue: function() {
-						return this.props.data.host;
+						return state.server.host;
 					}.bind(this),
 
 					getOptions: function() {
-						return this.props.data.hostHistory;
+						return state.server.hostHistory;
 					}.bind(this),
 
 					selectOption: function(index) {
-						log.info('select host: "' + this.props.data.hostHistory[index] + '"');
+						log.info('select host: "' + state.server.hostHistory[index] + '"');
 
-						this.props.data.host = this.props.data.hostHistory[index];
+						state.server.host = state.server.hostHistory[index];
 
 						this.restartServer();
 					}.bind(this),
@@ -92,17 +84,17 @@ define([
 					addOption: function(name) {
 						log.info('add host: "' + name + '"');
 
-						this.props.data.hostHistory.push(name);
-						this.props.data.host = name;
+						state.server.hostHistory.push(name);
+						state.server.host = name;
 
 						this.restartServer();
 						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
-						log.info('remove host: "' + this.props.data.hostHistory[index] + '"');
+						log.info('remove host: "' + state.server.hostHistory[index] + '"');
 
-						this.props.data.hostHistory.splice(index, 1);
+						state.server.hostHistory.splice(index, 1);
 
 						this.forceUpdate();
 					}.bind(this)
@@ -116,17 +108,17 @@ define([
 					}.bind(this),
 
 					getCurrentValue: function() {
-						return this.props.data.port;
+						return state.server.port;
 					}.bind(this),
 
 					getOptions: function() {
-						return this.props.data.portHistory;
+						return state.server.portHistory;
 					}.bind(this),
 
 					selectOption: function(index) {
-						log.info('select port: "' + this.props.data.portHistory[index] + '"');
+						log.info('select port: "' + state.server.portHistory[index] + '"');
 
-						this.props.data.port = this.props.data.portHistory[index];
+						state.server.port = state.server.portHistory[index];
 
 						this.restartServer();
 					}.bind(this),
@@ -134,17 +126,17 @@ define([
 					addOption: function(name) {
 						log.info('add port: "' + name + '"');
 
-						this.props.data.portHistory.push(name);
-						this.props.data.port = name;
+						state.server.portHistory.push(name);
+						state.server.port = name;
 
 						this.restartServer();
 						this.forceUpdate();
 					}.bind(this),
 
 					removeOption: function(index) {
-						log.info('remove port: "' + this.props.data.portHistory[index] + '"');
+						log.info('remove port: "' + state.server.portHistory[index] + '"');
 
-						this.props.data.portHistory.splice(index, 1);
+						state.server.portHistory.splice(index, 1);
 
 						this.forceUpdate();
 					}.bind(this),

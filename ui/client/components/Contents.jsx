@@ -2,8 +2,9 @@
 define([
 	'React',
 	'components/LogContentsTable',
-	'logviking/Logger'
-], function(React, LogContentsTable, logger) {
+	'logviking/Logger',
+	'models/LogEntriesModel'
+], function(React, LogContentsTable, logger, logEntries) {
 	'use strict';
 	
 	var log = logger.get('ContentsComponent');
@@ -18,9 +19,9 @@ define([
 		},
 
 		componentDidMount: function() {
-			this.props.logEntries.on(
-				[this.props.logEntries.Event.ENTRY_ADDED, this.props.logEntries.Event.CLEARED],
-				this.validate
+			logEntries.on(
+				[logEntries.Event.ENTRY_ADDED, logEntries.Event.CLEARED],
+				this.updateLogEntries
 			);
 		},
 
@@ -32,12 +33,12 @@ define([
 			}
 		},
 
-		validate: function(entry) {
+		updateLogEntries: function(entry) {
 			var contentsBody = this.refs.contentsBody.getDOMNode();
 
 			this.setState({
 				wasLogAtBottom: this.isAtBottom(contentsBody),
-				logEntries: this.props.logEntries.getFilteredEntries()
+				logEntries: logEntries.getFilteredEntries()
 			});
 		},
 

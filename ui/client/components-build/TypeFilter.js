@@ -1,29 +1,20 @@
 /** @jsx React.DOM */
 define([
 	'jquery',
+	'logviking/Logger',
 	'React',
-	'logviking/Logger'
-], function($, React, logger) {
+	'src/State'
+], function($, logger, React, state) {
 	'use strict';
 	
 	var log = logger.get('TypeFilterComponent');
 
 	var TypeFilter = React.createClass({displayName: 'TypeFilter',
 
-		propTypes: {
-			filters: React.PropTypes.shape({
-				log: React.PropTypes.bool.isRequired,
-				info: React.PropTypes.bool.isRequired,
-				warn: React.PropTypes.bool.isRequired,
-				error: React.PropTypes.bool.isRequired,
-				javascript: React.PropTypes.bool.isRequired
-			}).isRequired
-		},
-
 		onFilterToggle: function(e) {
 			var type = e.currentTarget.dataset.type;
 
-			this.props.filters[type] = !this.props.filters[type]
+			state.typeFilter[type] = !state.typeFilter[type]
 
 			$(e.currentTarget).blur();
 
@@ -39,12 +30,12 @@ define([
 				filterType,
 				filterEnabled;
 
-			for (filterType in this.props.filters) {
-				if (typeof this.props.filters[filterType] !== 'boolean') {
+			for (filterType in state.typeFilter) {
+				if (typeof state.typeFilter[filterType] !== 'boolean') {
 					continue;
 				}
 
-				filterEnabled = this.props.filters[filterType];
+				filterEnabled = state.typeFilter[filterType];
 				btnClasses = baseClasses.concat('app-filter-' + filterType);
 
 				if (filterEnabled) {
