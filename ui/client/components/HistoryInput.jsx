@@ -1,8 +1,9 @@
 /** @jsx React.DOM */
 define([
 	'React',
-	'logviking/Logger'
-], function(React, logger) {
+	'logviking/Logger',
+	'src/EventHub',
+], function(React, logger, eventHub) {
 	'use strict';
 	
 	var log = logger.get('HistoryInputComponent');
@@ -14,6 +15,7 @@ define([
 				getLabels: React.PropTypes.func.isRequired,
 				getValue: React.PropTypes.func.isRequired,
 				onValueChange: React.PropTypes.func.isRequired,
+				onValueBlur: React.PropTypes.func.isRequired,
 				getOptions: React.PropTypes.func.isRequired,
 				selectOption: React.PropTypes.func.isRequired,
 				removeOption: React.PropTypes.func.isRequired,
@@ -25,8 +27,31 @@ define([
 			var value = e.target.value;
 
 			this.props.source.onValueChange(value);
+		},
 
-			this.forceUpdate();
+		onValueBlur: function(e) {
+			var value = e.target.value;
+
+			this.props.source.onValueBlur(value);
+		},
+
+		clearValue: function() {
+			this.props.source.onValueChange('');
+
+			this.refs.input.getDOMNode().focus();
+		},
+
+		clearOptions: function(e) {
+			this.props.source.clearOptions();
+
+			e.preventDefault();
+			e.stopPropagation();
+		},
+
+		componentDidMount: function() {
+			eventHub.on(eventHub.Change.CONTENT_FILTER, function() {
+				this.forceUpdate();
+			}.bind(this));
 		},
 
 		render: function () {
@@ -67,18 +92,18 @@ define([
 			return (
 				<div className="app-clearable-input">
 					<div className="input-group">
-						<input type="text" className="form-control" placeholder={labels.placeholder} value={value} onChange={this.onValueChange}/>
+						<input type="text" className="form-control" ref="input" placeholder={labels.placeholder} value={value} onChange={this.onValueChange} onBlur={this.onValueBlur}/>
 						<div className="input-group-btn app-dropdown-with-buttons">
 							/* check out https://codemirror.net/doc/manual.html#addon_javascript-hint */
 							<button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"><span className="caret"></span></button>
 							<ul className="dropdown-menu dropdown-menu-right" role="menu">
 								{optionNodes}
 								{optionNodes.length > 0 ? <li className="divider"></li> : ''}
-								<li><a href="#">clear history</a></li>
+								<li><a href="#" onClick={this.clearOptions}>{labels.clear}</a></li>
 							</ul>
 						</div>
 					</div>
-					<a className="btn app-clear-command-btn" href="#"><i className="glyphicon glyphicon-remove-circle"></i></a>
+					<a className="btn app-clear-command-btn" href="#" onClick={this.clearValue}><i className="glyphicon glyphicon-remove-circle"></i></a>
 				</div>
 			);
 		}

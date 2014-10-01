@@ -44,6 +44,10 @@ define([
 		component: {
 			value: '',
 			history: []
+		},
+
+		onChange: function() {
+			eventHub.emit(eventHub.Change.CONTENT_FILTER);
 		}
 	};
 	

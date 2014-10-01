@@ -15,6 +15,7 @@ define([
 	EventHub.Change = EventHub.prototype.Change = {
 		SERVER: 'server',
 		TYPE_FILTER: 'type-filter',
+		CONTENT_FILTER: 'content-filter',
 		LOG_ENTRIES: 'log-entries',
 	};
 	

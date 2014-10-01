@@ -33,8 +33,20 @@ define([
 						return state.contentFilter[filterType].value;
 					}.bind(this, filterType),
 
-					onValueChange: function(filterType, value) {
-						state.contentFilter[filterType].value = value;
+					onValueChange: function(filterType, newValue) {
+						state.contentFilter[filterType].value = newValue;
+					}.bind(this, filterType),
+
+					onValueBlur: function(filterType, value) {
+						var alreadyExists = state.contentFilter[filterType].history.indexOf(value) !== -1;
+
+						if (!alreadyExists && value.length > 0) {
+							state.contentFilter[filterType].history.push(value);
+						}
+
+						if (state.contentFilter[filterType].history.length > 5) {
+							state.contentFilter[filterType].history.shift();
+						}
 					}.bind(this, filterType),
 
 					getOptions: function(filterType) {
