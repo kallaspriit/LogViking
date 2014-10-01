@@ -12,11 +12,12 @@ define([
 	var LogContentsTable = React.createClass({
 
 		componentDidMount: function() {
-			/*var $headerTable = $('#log-table-header'),
-				$contentsTable = $(this.refs.table.getDOMNode());
+			this.updateTableColumnWidths();
 
-			this.setColumnWidths($headerTable, $contentsTable);*/
+			$(window).resize(this.updateTableColumnWidths.bind(this));
+		},
 
+		updateTableColumnWidths: function() {
 			var $headerTable = $('#log-table-header'),
 				$contentsTable = $(this.refs.table.getDOMNode()),
 				columnWidths = this.getColumnWidths($headerTable),
