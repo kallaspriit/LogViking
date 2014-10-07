@@ -91,14 +91,15 @@ define([
 				}.bind(this));
 
 			settings = $.extend({
-				dropdownAlign: 'left'
+				dropdownAlign: 'left',
+				dropup: false
 			}, settings);
 
 			return (
 				React.DOM.div({className: "app-clearable-input"}, 
 					React.DOM.div({className: "input-group"}, 
 						React.DOM.input({type: "text", className: "form-control", ref: "input", placeholder: labels.placeholder, value: value, onChange: this.onValueChange, onBlur: this.onValueBlur}), 
-						React.DOM.div({className: "input-group-btn app-dropdown-with-buttons"}, 
+						React.DOM.div({className: 'input-group-btn app-dropdown-with-buttons' + (settings.dropup ? ' dropup' : '')}, 
 							"/* check out https://codemirror.net/doc/manual.html#addon_javascript-hint */", 
 							React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, React.DOM.span({className: "caret"})), 
 							React.DOM.ul({className: 'dropdown-menu dropdown-menu-' + settings.dropdownAlign, role: "menu"}, 

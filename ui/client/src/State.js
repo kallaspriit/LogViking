@@ -59,6 +59,15 @@ define([
 		}
 	};
 	
+	State.ExecuteJavascriptState = {
+		value: '',
+		history: [],
+
+		onChange: function() {
+			eventHub.emit(eventHub.Change.EXECUTE_JAVASCRIPT);
+		}
+	};
+
 	State.prototype.init = function() {
 		log.info('init');
 

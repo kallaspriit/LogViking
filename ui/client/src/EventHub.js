@@ -17,6 +17,7 @@ define([
 		TYPE_FILTER: 'type-filter',
 		CONTENT_FILTER: 'content-filter',
 		LOG_ENTRIES: 'log-entries',
+		EXECUTE_JAVASCRIPT: 'execute-javascript',
 	};
 	
 	EventHub.prototype.init = function() {

@@ -91,14 +91,15 @@ define([
 				}.bind(this));
 
 			settings = $.extend({
-				dropdownAlign: 'left'
+				dropdownAlign: 'left',
+				dropup: false
 			}, settings);
 
 			return (
 				<div className="app-clearable-input">
 					<div className="input-group">
 						<input type="text" className="form-control" ref="input" placeholder={labels.placeholder} value={value} onChange={this.onValueChange} onBlur={this.onValueBlur}/>
-						<div className="input-group-btn app-dropdown-with-buttons">
+						<div className={'input-group-btn app-dropdown-with-buttons' + (settings.dropup ? ' dropup' : '')}>
 							/* check out https://codemirror.net/doc/manual.html#addon_javascript-hint */
 							<button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"><span className="caret"></span></button>
 							<ul className={'dropdown-menu dropdown-menu-' + settings.dropdownAlign} role="menu">

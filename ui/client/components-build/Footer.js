@@ -1,15 +1,89 @@
 /** @jsx React.DOM */
 define([
 	'React',
-	'logviking/Logger'
-], function(React, logger) {
+	'logviking/Logger',
+	'src/State',
+	'src/EventHub',
+	'components/HistoryInput'
+], function(React, logger, state, eventHub, HistoryInput) {
 	'use strict';
 	
 	var log = logger.get('FooterComponent');
 
 	var Footer = React.createClass({displayName: 'Footer',
+
+		componentDidMount: function() {
+			eventHub.on(eventHub.Change.EXECUTE_JAVASCRIPT, function() {
+				this.forceUpdate();
+
+				this.x(state.executeJavascript.value);
+			}.bind(this));
+		},
+
+		x: function(value) {
+			log.info('x', value);
+		},
+
 		render: function () {
 			log.info('render');
+
+			var executeJavascriptSource = {
+				getLabels: function() {
+					return {
+						placeholder: 'Execute remote JavaScript',
+						clear: 'clear history'
+					};
+				}.bind(this),
+
+				getValue: function() {
+					return state.executeJavascript.value;
+				}.bind(this),
+
+				onValueChange: function(newValue) {
+					state.executeJavascript.value = newValue;
+				}.bind(this),
+
+				onValueBlur: function(value) {
+					var alreadyExists = state.executeJavascript.history.indexOf(value) !== -1;
+
+					if (!alreadyExists && value.length > 0) {
+						state.executeJavascript.history.push(value);
+					}
+
+					if (state.executeJavascript.history.length > 5) {
+						state.executeJavascript.history.shift();
+					}
+				}.bind(this),
+
+				getOptions: function() {
+					return state.executeJavascript.history;
+				}.bind(this),
+
+				selectOption: function(index) {
+					log.info('select: "' + state.executeJavascript.history[index] + '"');
+
+					state.executeJavascript.value = state.executeJavascript.history[index];
+				}.bind(this),
+
+				removeOption: function(index) {
+					log.info('remove: "' + state.executeJavascript.history[index] + '"');
+
+					state.executeJavascript.history.splice(index, 1);
+				}.bind(this),
+
+				clearOptions: function() {
+					log.info('clear options for ' + filterType);
+
+					state.executeJavascript.history = [];
+				}.bind(this),
+
+				getSettings: function() {
+					return {
+						dropdownAlign: 'right',
+						dropup: true
+					}
+				}.bind(this)
+			};
 		
 			return (
 				React.DOM.div({className: "navbar navbar-default navbar-fixed-bottom app-footer", role: "navigation"}, 
@@ -17,37 +91,7 @@ define([
 						React.DOM.form({className: "app-footer-form"}, 
 							React.DOM.div({className: "row"}, 
 								React.DOM.div({className: "form-group col-xs-12"}, 
-									React.DOM.div({className: "app-clearable-input"}, 
-										React.DOM.div({className: "input-group"}, 
-											React.DOM.input({className: "form-control", type: "text", placeholder: "Execute remote JavaScript"}), 
-											React.DOM.div({className: "input-group-btn dropup app-dropdown-with-buttons"}, 
-												React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, React.DOM.span({className: "caret"})), 
-												React.DOM.ul({className: "dropdown-menu dropdown-menu-right", role: "menu"}, 
-													React.DOM.li(null, 
-														React.DOM.a({href: "#"}, "window.location.href"), 
-														React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-															React.DOM.span({className: "glyphicon glyphicon-remove"})
-														)
-													), 
-													React.DOM.li(null, 
-														React.DOM.a({href: "#"}, "player.pause()"), 
-														React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-															React.DOM.span({className: "glyphicon glyphicon-remove"})
-														)
-													), 
-													React.DOM.li(null, 
-														React.DOM.a({href: "#"}, "history.back()"), 
-														React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-															React.DOM.span({className: "glyphicon glyphicon-remove"})
-														)
-													), 
-													React.DOM.li({className: "divider"}), 
-													React.DOM.li(null, React.DOM.a({href: "#"}, "clear history"))
-												)
-											)
-										), 
-										React.DOM.a({className: "btn app-clear-command-btn", href: "#"}, React.DOM.i({className: "glyphicon glyphicon-remove-circle"}))
-									)
+									HistoryInput({source: executeJavascriptSource})
 								)
 							)
 						)
