@@ -20,9 +20,19 @@ define([
 				message: this._dataArrayToMessage(entry.data)
 			},
 			regexpComponent,
+			filterType,
+			filterEnabled,
 			regexp;
 
 		// TODO check for time and type
+
+		for (filterType in this._type) {
+			filterEnabled = this._type[filterType];
+
+			if (!filterEnabled && entry.type === filterType) {
+				return false;
+			}
+		}
 
 		for (regexpComponent in this._fields) {
 			if (this._fields[regexpComponent].length === 0) {
