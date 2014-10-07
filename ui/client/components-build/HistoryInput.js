@@ -60,6 +60,7 @@ define([
 			var value = this.props.source.getValue(),
 				options = this.props.source.getOptions(),
 				labels = this.props.source.getLabels(),
+				settings = this.props.source.getSettings(),
 				optionNodes = options.map(function(option, index) {
 					var selectOption = function(e) {
 							log.info('selecting option: ' + option);
@@ -89,6 +90,10 @@ define([
 					);
 				}.bind(this));
 
+			settings = $.extend({
+				dropdownAlign: 'left'
+			}, settings);
+
 			return (
 				React.DOM.div({className: "app-clearable-input"}, 
 					React.DOM.div({className: "input-group"}, 
@@ -96,7 +101,7 @@ define([
 						React.DOM.div({className: "input-group-btn app-dropdown-with-buttons"}, 
 							"/* check out https://codemirror.net/doc/manual.html#addon_javascript-hint */", 
 							React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, React.DOM.span({className: "caret"})), 
-							React.DOM.ul({className: "dropdown-menu dropdown-menu-right", role: "menu"}, 
+							React.DOM.ul({className: 'dropdown-menu dropdown-menu-' + settings.dropdownAlign, role: "menu"}, 
 								optionNodes, 
 								optionNodes.length > 0 ? React.DOM.li({className: "divider"}) : '', 
 								React.DOM.li(null, React.DOM.a({href: "#", onClick: this.clearOptions}, labels.clear))

@@ -39,8 +39,17 @@ define([
 		eventHub.emit(eventHub.Change.LOG_ENTRIES);
 	};
 
-	LogEntriesModel.prototype.getFilteredEntries = function() {
-		return this.entries; // TODO filter
+	LogEntriesModel.prototype.getFilteredEntries = function(filter) {
+		var filteredEntries = [],
+			i;
+
+		for (i = 0; i < this.entries.length; i++) {
+			if (filter.entryPasses(this.entries[i])) {
+				filteredEntries.push(this.entries[i]);
+			}
+		}
+
+		return filteredEntries;
 	};
 
     return new LogEntriesModel();

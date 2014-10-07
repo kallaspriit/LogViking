@@ -2,10 +2,13 @@
 define([
 	'React',
 	'logviking/Logger',
+	'src/State',
+	'src/EventHub',
+	'models/LogEntryFilter',
 	'models/LogEntriesModel',
 	'components/LogContentsTable',
 	'components/LogHeaderTable'
-], function(React, logger, logEntries, LogContentsTable, LogHeaderTable) {
+], function(React, logger, state, eventHub, LogEntryFilter, logEntries, LogContentsTable, LogHeaderTable) {
 	'use strict';
 	
 	var log = logger.get('ContentsComponent');
@@ -20,8 +23,8 @@ define([
 		},
 
 		componentDidMount: function() {
-			logEntries.on(
-				[logEntries.Event.ENTRY_ADDED, logEntries.Event.CLEARED],
+			eventHub.on(
+				[eventHub.Change.TYPE_FILTER, eventHub.Change.CONTENT_FILTER, eventHub.Change.LOG_ENTRIES],
 				this.updateLogEntries
 			);
 		},
@@ -35,11 +38,23 @@ define([
 		},
 
 		updateLogEntries: function(entry) {
-			var contentsBody = this.refs.contentsBody.getDOMNode();
+			var filter = new LogEntryFilter({
+					type: {
+						log: state.typeFilter.log,
+						info: state.typeFilter.info,
+						warn: state.typeFilter.warn,
+						error: state.typeFilter.error,
+						javascript: state.typeFilter.javascript,
+					},
+					time: state.contentFilter.time.value,
+					component: state.contentFilter.component.value,
+					message: state.contentFilter.message.value,
+				}),
+				contentsBody = this.refs.contentsBody.getDOMNode();
 
 			this.setState({
 				wasLogAtBottom: this.isAtBottom(contentsBody),
-				logEntries: logEntries.getFilteredEntries()
+				logEntries: logEntries.getFilteredEntries(filter)
 			});
 		},
 

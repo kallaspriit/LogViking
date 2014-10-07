@@ -41,7 +41,15 @@ define([
 	};
 
 	State.ContentFilterState = {
+		time: {
+			value: '5m',
+			history: ['1m', '5m', '10m', 'all']
+		},
 		component: {
+			value: '',
+			history: []
+		},
+		message: {
 			value: '',
 			history: []
 		},

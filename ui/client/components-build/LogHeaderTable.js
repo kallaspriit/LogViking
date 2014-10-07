@@ -10,6 +10,90 @@ define([
 	var log = logger.get('LogHeaderTableComponent');
 
 	var LogHeaderTable = React.createClass({displayName: 'LogHeaderTable',
+
+		getFilterSource: function(filterType) {
+			var settings = {
+				time: {
+					label: {
+						placeholder: 'Time filter',
+						clear: 'clear history'
+					},
+					dropdownAlign: 'left'
+				},
+				component: {
+					label: {
+						placeholder: 'Filter by component',
+						clear: 'clear history'
+					},
+					dropdownAlign: 'right'
+				},
+				message: {
+					label: {
+						placeholder: 'Filter by message',
+						clear: 'clear history'
+					},
+					dropdownAlign: 'right'
+				}
+			};
+
+			return {
+				getLabels: function() {
+					return {
+						placeholder: settings[filterType].label.placeholder,
+						clear: settings[filterType].label.clear
+					};
+				}.bind(this),
+
+				getValue: function() {
+					return state.contentFilter[filterType].value;
+				}.bind(this),
+
+				onValueChange: function(newValue) {
+					state.contentFilter[filterType].value = newValue;
+				}.bind(this),
+
+				onValueBlur: function(value) {
+					var alreadyExists = state.contentFilter[filterType].history.indexOf(value) !== -1;
+
+					if (!alreadyExists && value.length > 0) {
+						state.contentFilter[filterType].history.push(value);
+					}
+
+					if (state.contentFilter[filterType].history.length > 5) {
+						state.contentFilter[filterType].history.shift();
+					}
+				}.bind(this),
+
+				getOptions: function() {
+					return state.contentFilter[filterType].history;
+				}.bind(this),
+
+				selectOption: function(index) {
+					log.info('select ' + filterType + ': "' + state.contentFilter[filterType].history[index] + '"');
+
+					state.contentFilter[filterType].value = state.contentFilter[filterType].history[index];
+				}.bind(this),
+
+				removeOption: function(index) {
+					log.info('remove ' + filterType + ': "' + state.contentFilter[filterType].history[index] + '"');
+
+					state.contentFilter[filterType].history.splice(index, 1);
+				}.bind(this),
+
+				clearOptions: function() {
+					log.info('clear options for ' + filterType);
+
+					state.contentFilter[filterType].history = [];
+				}.bind(this),
+
+				getSettings: function() {
+					return {
+						dropdownAlign: settings[filterType].dropdownAlign
+					}
+				}.bind(this)
+			}
+		},
+
 		render: function () {
 			log.info('render');
 
@@ -21,56 +105,7 @@ define([
 					continue;
 				}
 
-				filterSources[filterType] = {
-					getLabels: function() {
-						return {
-							placeholder: 'Filter by component',
-							clear: 'clear history'
-						};
-					}.bind(this),
-
-					getValue: function(filterType) {
-						return state.contentFilter[filterType].value;
-					}.bind(this, filterType),
-
-					onValueChange: function(filterType, newValue) {
-						state.contentFilter[filterType].value = newValue;
-					}.bind(this, filterType),
-
-					onValueBlur: function(filterType, value) {
-						var alreadyExists = state.contentFilter[filterType].history.indexOf(value) !== -1;
-
-						if (!alreadyExists && value.length > 0) {
-							state.contentFilter[filterType].history.push(value);
-						}
-
-						if (state.contentFilter[filterType].history.length > 5) {
-							state.contentFilter[filterType].history.shift();
-						}
-					}.bind(this, filterType),
-
-					getOptions: function(filterType) {
-						return state.contentFilter[filterType].history;
-					}.bind(this, filterType),
-
-					selectOption: function(filterType, index) {
-						log.info('select ' + filterType + ': "' + state.contentFilter[filterType].history[index] + '"');
-
-						state.contentFilter[filterType].value = state.contentFilter[filterType].history[index];
-					}.bind(this, filterType),
-
-					removeOption: function(filterType, index) {
-						log.info('remove ' + filterType + ': "' + state.contentFilter[filterType].history[index] + '"');
-
-						state.contentFilter[filterType].history.splice(index, 1);
-					}.bind(this, filterType),
-
-					clearOptions: function(filterType, index) {
-						log.info('clear options for ' + filterType);
-
-						state.contentFilter[filterType].history = [];
-					}.bind(this, filterType)
-				}
+				filterSources[filterType] = this.getFilterSource(filterType);
 			}
 		
 			return (
@@ -83,54 +118,13 @@ define([
 						), 
 						React.DOM.tr(null, 
 							React.DOM.td(null, 
-								React.DOM.div({className: "input-group"}, 
-									React.DOM.input({type: "text", className: "form-control", defaultValue: "5m"}), 
-									React.DOM.div({className: "input-group-btn"}, 
-										React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, React.DOM.span({className: "caret"})), 
-										React.DOM.ul({className: "dropdown-menu dropdown-menu-right", role: "menu"}, 
-											React.DOM.li(null, React.DOM.a({href: "#"}, "60 seconds")), 
-											React.DOM.li(null, React.DOM.a({href: "#"}, "2 minutes")), 
-											React.DOM.li(null, React.DOM.a({href: "#"}, "10 minutes")), 
-											React.DOM.li(null, React.DOM.a({href: "#"}, "all"))
-										)
-									)
-								)
+								HistoryInput({source: filterSources.time})
 							), 
 							React.DOM.td(null, 
 								HistoryInput({source: filterSources.component})
 							), 
 							React.DOM.td(null, 
-								React.DOM.div({className: "app-clearable-input"}, 
-									React.DOM.div({className: "input-group"}, 
-										React.DOM.input({type: "text", className: "form-control", placeholder: "Filter by message"}), 
-										React.DOM.div({className: "input-group-btn app-dropdown-with-buttons"}, 
-											React.DOM.button({type: "button", className: "btn btn-default dropdown-toggle", 'data-toggle': "dropdown"}, React.DOM.span({className: "caret"})), 
-											React.DOM.ul({className: "dropdown-menu dropdown-menu-right", role: "menu"}, 
-												React.DOM.li(null, 
-													React.DOM.a({href: "#"}, "player"), 
-													React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-														React.DOM.span({className: "glyphicon glyphicon-remove"})
-													)
-												), 
-												React.DOM.li(null, 
-													React.DOM.a({href: "#"}, "play"), 
-													React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-														React.DOM.span({className: "glyphicon glyphicon-remove"})
-													)
-												), 
-												React.DOM.li(null, 
-													React.DOM.a({href: "#"}, "pause|stop"), 
-													React.DOM.button({type: "button", className: "btn btn-link btn-sm app-dropdown-btn"}, 
-														React.DOM.span({className: "glyphicon glyphicon-remove"})
-													)
-												), 
-												React.DOM.li({className: "divider"}), 
-												React.DOM.li(null, React.DOM.a({href: "#"}, "clear history"))
-											)
-										)
-									), 
-									React.DOM.a({className: "btn app-clear-command-btn", href: "#"}, React.DOM.i({className: "glyphicon glyphicon-remove-circle"}))
-								)
+								HistoryInput({source: filterSources.message})
 							)
 						)
 					)
