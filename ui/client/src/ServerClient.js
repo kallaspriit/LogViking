@@ -38,7 +38,7 @@ define([
 	};
 
 	ServerClient.prototype._onSocketOpen = function() {
-		this._request('become-client');
+		this._request('become-inspector');
 	};
 
 	ServerClient.prototype._onSocketMessage = function(event) {

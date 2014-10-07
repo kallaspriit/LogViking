@@ -96,7 +96,7 @@ define([
 			}, settings);
 
 			return (
-				<div className="app-clearable-input">
+				<div className={'app-clearable-input' + (settings.className ? ' ' + settings.className : '')}>
 					<div className="input-group">
 						<input type="text" className="form-control" ref="input" placeholder={labels.placeholder} value={value} onChange={this.onValueChange} onBlur={this.onValueBlur}/>
 						<div className={'input-group-btn app-dropdown-with-buttons' + (settings.dropup ? ' dropup' : '')}>

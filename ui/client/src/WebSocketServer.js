@@ -8,31 +8,7 @@ define([
 
 	// provide dummy implementation on the browser
 	if (typeof require === 'undefined') {
-		return function() {
-			this._started = false;
-
-			this.setRpcInterface = function() {};
-
-			this.listen = function() {
-				this._started = true;
-			};
-
-			this.isStarted = function() {
-				return this._started;
-			};
-
-			this.isClientConnected = function() {
-				return false;
-			};
-
-			this.stop = function() {
-				this._started = false;
-			};
-
-			this.on = function() {};
-
-			this.Event = {};
-		};
+		return null;
 	}
 
 	var WebSocket = require('ws'),
@@ -65,6 +41,10 @@ define([
 		log.info('setting RPC interface');
 
 		this._rpcInterface = rpcInterface;
+	};
+
+	WebSocketServer.prototype.getRpcInterface = function() {
+		return this._rpcInterface;
 	};
 
 	WebSocketServer.prototype.getNextRequestId = function(/*rpcInterface*/) {
@@ -253,6 +233,10 @@ define([
 		}
 
 		return this._rpcInterface.isClientConnected();
+	};
+
+	WebSocketServer.prototype._isConnectionValid = function() {
+		return this._socket !== null && this._socket.readyState === WebSocket.OPEN;
 	};
 
 	WebSocketServer.prototype.broadcast = function(message) {

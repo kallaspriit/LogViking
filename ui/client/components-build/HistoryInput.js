@@ -96,7 +96,7 @@ define([
 			}, settings);
 
 			return (
-				React.DOM.div({className: "app-clearable-input"}, 
+				React.DOM.div({className: 'app-clearable-input' + (settings.className ? ' ' + settings.className : '')}, 
 					React.DOM.div({className: "input-group"}, 
 						React.DOM.input({type: "text", className: "form-control", ref: "input", placeholder: labels.placeholder, value: value, onChange: this.onValueChange, onBlur: this.onValueBlur}), 
 						React.DOM.div({className: 'input-group-btn app-dropdown-with-buttons' + (settings.dropup ? ' dropup' : '')}, 

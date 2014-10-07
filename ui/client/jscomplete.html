@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>JsComplete</title>
+</head>
+<body>
+	<div id="autocomplete"></div>
+	<input id="value" type="text">
+	<script src="lib/jquery/jquery-2.1.1.min.js"></script>
+	<script>
+
+	var autocomplete = function(input, context) {
+		context = context || window;
+
+		var tokens = input.split('.'),
+			ref = context,
+			hints = [],
+			missedToken = null,
+			i,
+			key;
+
+		for (i = 0; i < tokens.length; i++) {
+			if (typeof ref[tokens[i]] === 'undefined') {
+				missedToken = tokens[i];
+
+				break;
+			}
+
+			ref = ref[tokens[i]];
+		}
+
+		if (typeof ref === 'object' && ref !== null) {
+			for (key in ref) {
+				if (missedToken !== null && key.substr(0, missedToken.length).toLowerCase() === missedToken.toLowerCase()) {
+					hints.push(key);
+				}
+			}
+		}
+
+		return hints;
+	};
+
+	var $value =  $('#value'),
+		$autocomplete = $('#autocomplete');
+
+	$value.keyup(function() {
+		var value = $(this).val(),
+			hints = autocomplete(value, window);
+
+		$autocomplete.html(value + ': ' + hints.join(', '));
+	});
+
+	</script>
+</body>
+</html>

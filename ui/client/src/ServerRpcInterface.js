@@ -1,7 +1,8 @@
 define([
 	'logviking/Logger',
-	'src/EventEmitter'
-], function(logger, EventEmitter) {
+	'src/EventEmitter',
+	'src/EventHub',
+], function(logger, EventEmitter, eventHub) {
 	'use strict';
 
 	var log = logger.get('ServerRpcInterface');
@@ -10,7 +11,8 @@ define([
 		EventEmitter.call(this);
 
 		this._socketServer = socketServer;
-		this._listenerIds = [];
+		this._inspectedId = null;
+		this._inspectorIds = [];
 	};
 
 	ServerRpcInterface.prototype = Object.create(EventEmitter.prototype);
@@ -20,7 +22,7 @@ define([
 	};
 
 	ServerRpcInterface.prototype.log = function(parameters) {
-		this._broadcastClients({
+		this._broadcastInspectors({
 			handler: 'log',
 			info: parameters
 		});
@@ -29,26 +31,40 @@ define([
 	ServerRpcInterface.prototype.refresh = function() {
 		log.info('refreshing');
 
-		this._broadcastClients({
+		this._broadcastInspectors({
 			handler: 'refresh'
 		});
 	};
 
-	ServerRpcInterface.prototype.becomeClient = function(parameters, client) {
-		log.info('requested to become client: ' + client.id);
+	ServerRpcInterface.prototype.becomeInspector = function(parameters, client) {
+		log.info('requested to become an inspector: ' + client.id);
 
-		this._listenerIds.push(client.id);
+		this._inspectorIds.push(client.id);
 
 		this.emit(ServerRpcInterface.Event.CLIENTS_CHANGED);
 	};
 
-	ServerRpcInterface.prototype.getClientCount = function() {
+	ServerRpcInterface.prototype.becomeInspected = function(parameters, client) {
+		log.info('requested to become the inspected: ' + client.id);
+
+		this._inspectedId = client.id;
+
+		this.emit(ServerRpcInterface.Event.CLIENTS_CHANGED);
+	};
+
+	ServerRpcInterface.prototype.javascriptAutocompleteResponse = function(parameters/*, client*/) {
+		log.info('got autocomplete hints: ' + parameters.hints.join(', '));
+
+		eventHub.emit(eventHub.Change.JAVASCRIPT_AUTOCOMPLETE_HINTS_UPDATED, parameters.hints);
+	};
+
+	ServerRpcInterface.prototype.getInspectorCount = function() {
 		var clients = this._socketServer.getClients(),
 			clientCount = 0,
 			i;
 
 		for (i = 0; i < clients.length; i++) {
-			if (this._listenerIds.indexOf(clients[i].id) !== -1) {
+			if (this._inspectorIds.indexOf(clients[i].id) !== -1) {
 				clientCount++;
 			}
 		}
@@ -56,34 +72,51 @@ define([
 		return clientCount;
 	};
 
-	ServerRpcInterface.prototype.getReporterCount = function() {
+	ServerRpcInterface.prototype.hasInspected = function() {
 		var clients = this._socketServer.getClients(),
-			reporterCount = 0,
 			i;
 
 		for (i = 0; i < clients.length; i++) {
-			if (this._listenerIds.indexOf(clients[i].id) === -1) {
-				reporterCount++;
+			if (clients[i].id === this._inspectedId) {
+				return true;
 			}
 		}
 
-		return reporterCount;
+		return false;
 	};
 
-	ServerRpcInterface.prototype.isClientConnected = function() {
-		return this.getReporterCount() > 0 && this.getClientCount() > 0;
+	ServerRpcInterface.prototype.requestJavascriptAutocomplete = function(value) {
+		this._sendToInspected({
+			handler: 'javascript-autocomplete',
+			parameters: {
+				value: value
+			}
+		});
 	};
 
-	ServerRpcInterface.prototype._broadcastClients = function(message) {
+	ServerRpcInterface.prototype._broadcastInspectors = function(message) {
 		var clients = this._socketServer.getClients(),
 			i;
 
 		for (i = 0; i < clients.length; i++) {
-			if (this._listenerIds.indexOf(clients[i].id) === -1) {
+			if (this._inspectorIds.indexOf(clients[i].id) === -1) {
 				continue;
 			}
 
 			clients[i].send(message);
+		}
+	};
+
+	ServerRpcInterface.prototype._sendToInspected = function(message) {
+		var clients = this._socketServer.getClients(),
+			i;
+
+		for (i = 0; i < clients.length; i++) {
+			if (clients[i].id === this._inspectedId) {
+				clients[i].send(message);
+
+				break;
+			}
 		}
 	};
 

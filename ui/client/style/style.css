@@ -265,6 +265,39 @@ BODY.status-bad .app-header {
 	font-size: 32px;
 }
 
+/* autocomplete */
+.app-autocomplete-wrap INPUT {
+	font-family: "Consolas", "Courier New", Courier, mono !important;
+}
+
+/* selection popover */
+.app-selection-popover {
+	position: absolute;
+	left: 104px;
+	bottom: 26px;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	z-index: 2;
+}
+.app-selection-popover > LI {
+	padding: 0 5px;
+	font-family: "Consolas", "Courier New", Courier, mono;
+	font-size: 90%;
+	cursor: pointer;
+}
+.app-selection-popover > LI:hover,
+.app-selection-popover > LI.selected {
+	background-color: #EEE;
+}
+.app-selection-popover > LI > EM {
+	font-style: normal;
+	font-weight: bold;
+}
+
 /* formatter types */
 .value-string {
 	font-style: normal;

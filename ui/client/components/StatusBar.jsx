@@ -37,7 +37,7 @@ define([
 			if (server.isStarted()) {
 				log.info('server started');
 
-				if (server.isClientConnected()) {
+				if (server.getRpcInterface().hasInspected()) {
 					newStatusText = 'client connected';
 					newLevel = 'good';
 				} else {

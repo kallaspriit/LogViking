@@ -17,7 +17,8 @@ define([
 		TYPE_FILTER: 'type-filter',
 		CONTENT_FILTER: 'content-filter',
 		LOG_ENTRIES: 'log-entries',
-		EXECUTE_JAVASCRIPT: 'execute-javascript',
+		EXECUTE_JAVASCRIPT_AUTOCOMPLETE: 'execute-javascript-autocomplete',
+		JAVASCRIPT_AUTOCOMPLETE_HINTS_UPDATED: 'javascript-autocomplete-hints-updated',
 	};
 	
 	EventHub.prototype.init = function() {

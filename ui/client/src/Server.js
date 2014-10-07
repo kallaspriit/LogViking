@@ -10,6 +10,39 @@ define([
 
 	var log = logger.get('Server');
 
+	// provide dummy implementation on the browser
+	if (typeof require === 'undefined') {
+		return {
+			started: false,
+
+			init: function() {},
+			setRpcInterface: function() {},
+			getRpcInterface: function() {
+				return {
+					hasInspected: function() {
+						return true;
+					}
+				};
+			},
+
+			listen: function() {
+				this._started = true;
+			},
+
+			isStarted: function() {
+				return this._started;
+			},
+
+			stop: function() {
+				this._started = false;
+			},
+
+			on: function() {},
+
+			Event: {}
+		};
+	}
+
 	var Server = function() {
 		WebSocketServer.call(this);
 
@@ -30,6 +63,10 @@ define([
 		WebSocketServer.prototype.listen.apply(this, [host, port]);
 
 		this._serverClient.connect(host, port);
+	};
+
+	Server.prototype.requestJavascriptAutocomplete = function(value) {
+		this._rpcInterface.requestJavascriptAutocomplete(value);
 	};
 
 	Server.prototype._setupServerClient = function() {

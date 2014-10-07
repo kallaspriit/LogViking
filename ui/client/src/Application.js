@@ -4,8 +4,9 @@ define([
 	'logviking/SocketLog',
 	'src/UserInterface',
 	'src/Server',
-	'src/State'
-], function(logger, ConsoleLog, SocketLog, UserInterface, server, state) {
+	'src/State',
+	'src/EventHub'
+], function(logger, ConsoleLog, SocketLog, UserInterface, server, state, eventHub) {
 	'use strict';
 
 	var log = logger.get('Application');
@@ -24,6 +25,7 @@ define([
 		this._setupConfig();
 		this._setupServer();
 		this._setupUserInterface();
+		this._setupJavascriptExecute();
 	};
 
 	Application.prototype.stopServer = function() {
@@ -67,10 +69,25 @@ define([
 		this._ui.on(UserInterface.Event.RELOADING, this._onReloading.bind(this));
 	};
 
+
+	Application.prototype._setupJavascriptExecute = function() {
+		log.info('setup javascript execute');
+
+		eventHub.on(eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE, function() {
+			this._requestJavascriptAutocomplete(state.executeJavascript.value);
+		}.bind(this));
+	};
+
 	Application.prototype._onReloading = function() {
 		log.info('application is reloading');
 
 		this._server.stop();
+	};
+
+	Application.prototype._requestJavascriptAutocomplete = function(value) {
+		log.info('requesting javascript autocomplete for: ' + value);
+
+		server.requestJavascriptAutocomplete(value);
 	};
 
 	return Application;
