@@ -22,7 +22,7 @@ define([
 		},
 
 		componentDidMount: function() {
-			eventHub.on([eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE, eventHub.Change.SERVER], function() {
+			eventHub.on([eventHub.Intent.UPDATE_JAVASCRIPT_AUTOCOMPLETE, eventHub.Change.SERVER], function() {
 				this.forceUpdate();
 			}.bind(this));
 
@@ -64,6 +64,16 @@ define([
 			} else {
 				return value.substr(0, lastDotPos) + '.';
 			}
+		},
+
+		onJavascriptExecuteSubmit: function(event) {
+			var value = state.executeJavascript.value;
+
+			log.info('executing javascript: ' + value);
+
+			eventHub.emit(eventHub.Intent.EXECUTE_REMOTE_JAVASCRIPT, value);
+
+			event.preventDefault();
 		},
 
 		render: function () {
@@ -199,7 +209,7 @@ define([
 			return (
 				React.DOM.div({className: "navbar navbar-default navbar-fixed-bottom app-footer", role: "navigation"}, 
 					React.DOM.div({className: "container-fluid app-navbar-container"}, 
-						React.DOM.form({className: "app-footer-form"}, 
+						React.DOM.form({className: "app-footer-form", onSubmit: this.onJavascriptExecuteSubmit}, 
 							React.DOM.div({className: "row"}, 
 								React.DOM.div({className: "form-group col-xs-12"}, 
 									HistoryInput({ref: "executeJavascript", source: executeJavascriptSource}), 

@@ -73,8 +73,12 @@ define([
 	Application.prototype._setupJavascriptExecute = function() {
 		log.info('setup javascript execute');
 
-		eventHub.on(eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE, function() {
+		eventHub.on(eventHub.Intent.UPDATE_JAVASCRIPT_AUTOCOMPLETE, function() {
 			this._requestJavascriptAutocomplete(state.executeJavascript.value);
+		}.bind(this));
+
+		eventHub.on(eventHub.Intent.EXECUTE_REMOTE_JAVASCRIPT, function(value) {
+			this._executeRemoteJavascript(value);
 		}.bind(this));
 	};
 
@@ -87,7 +91,13 @@ define([
 	Application.prototype._requestJavascriptAutocomplete = function(value) {
 		log.info('requesting javascript autocomplete for: ' + value);
 
-		server.requestJavascriptAutocomplete(value);
+		server.getRpcInterface().requestJavascriptAutocomplete(value);
+	};
+
+	Application.prototype._executeRemoteJavascript = function(value) {
+		log.info('executing remove javascript: ' + value);
+
+		server.getRpcInterface().executeRemoteJavascript(value);
 	};
 
 	return Application;

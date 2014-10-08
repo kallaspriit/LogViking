@@ -94,6 +94,15 @@ define([
 		});
 	};
 
+	ServerRpcInterface.prototype.executeRemoteJavascript = function(value) {
+		this._sendToInspected({
+			handler: 'execute-javascript',
+			parameters: {
+				value: value
+			}
+		});
+	};
+
 	ServerRpcInterface.prototype._broadcastInspectors = function(message) {
 		var clients = this._socketServer.getClients(),
 			i;

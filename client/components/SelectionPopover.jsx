@@ -18,6 +18,18 @@ define([
 			})
 		},
 
+		componentDidUpdate: function() {
+			var $list = $(this.refs.popover.getDOMNode()),
+				selectedIndex = this.props.source.getSelectedIndex(),
+				activeItem = $list.find('LI:eq(' + selectedIndex + ')');
+
+			if (activeItem.length === 0) {
+				return;
+			}
+
+			activeItem[0].scrollIntoView(false);
+		},
+
 		render: function () {
 			log.info('render');
 
@@ -35,7 +47,7 @@ define([
 				}.bind(this));
 		
 			return (
-				<ul className="app-selection-popover">
+				<ul ref="popover" className="app-selection-popover">
 					{options}
 				</ul>
 			);

@@ -64,7 +64,7 @@ define([
 		history: [],
 
 		onChange: function() {
-			eventHub.emit(eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE);
+			eventHub.emit(eventHub.Intent.UPDATE_JAVASCRIPT_AUTOCOMPLETE);
 		}
 	};
 

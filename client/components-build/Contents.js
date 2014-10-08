@@ -32,6 +32,10 @@ define([
 					}.bind(this), 100);
 				}.bind(this)
 			);
+
+			eventHub.on(eventHub.Intent.CLEAR_MESSAGES, function() {
+				logEntries.clear();
+			}.bind(this));
 		},
 
 		componentDidUpdate: function() {
@@ -71,13 +75,17 @@ define([
 			return $(el).scrollTop() + $(el).innerHeight() >= el.scrollHeight;
 		},
 
+		clearMessages: function() {
+			eventHub.emit(eventHub.Intent.CLEAR_MESSAGES);
+		},
+
 		render: function () {
 			log.info('render');
 		
 			return (
 				React.DOM.div({className: "container-fluid app-contents"}, 
 					React.DOM.div({className: "btn-group app-clear-btn"}, 
-						React.DOM.button({type: "button", className: "btn btn-sm btn-default"}, "Clear messages"), 
+						React.DOM.button({type: "button", className: "btn btn-sm btn-default", onClick: this.clearMessages}, "Clear messages"), 
 						React.DOM.button({type: "button", className: "btn btn-sm btn-default"}, "Reload target")
 					), 
 

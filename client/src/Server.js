@@ -65,10 +65,6 @@ define([
 		this._serverClient.connect(host, port);
 	};
 
-	Server.prototype.requestJavascriptAutocomplete = function(value) {
-		this._rpcInterface.requestJavascriptAutocomplete(value);
-	};
-
 	Server.prototype._setupServerClient = function() {
 		log.info('setting up server client');
 

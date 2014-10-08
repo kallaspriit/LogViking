@@ -41,7 +41,7 @@ define([
 		var parameters = Array.prototype.slice.call(arguments, 0).slice(2),
 			clone;
 
-		try {
+		/*try {
 			if (parameters !== null && typeof parameters === 'object' && !Array.isArray(parameters)) {
 				clone = jQuery.extend(true, {}, parameters);
 			} else {
@@ -49,14 +49,24 @@ define([
 			}
 		} catch (e) {
 			return;
-		}
+		}*/
 
-		this._request('log', {
-			type: type,
-			component: component,
-			parameters: this._preprocessData(clone),
-			date: new Date()
-		});
+		try {
+			this._request('log', {
+				type: type,
+				component: component,
+				//parameters: this._preprocessData(clone),
+				parameters: parameters,
+				date: new Date()
+			});
+		} catch (e) {
+			this._request('log', {
+				type: type,
+				component: component,
+				parameters: ['evaluation failed: ' + e.message],
+				date: new Date()
+			});
+		}
 	};
 
 	SocketLog.prototype._request = function(handler, parameters) {
@@ -171,6 +181,10 @@ define([
 			case 'javascript-autocomplete':
 				this._handleJavascriptAutocomplete(request.parameters.value);
 			break;
+
+			case 'execute-javascript':
+				this._handleExecuteJavascript(request.parameters.value);
+			break;
 		}
 	};
 
@@ -186,13 +200,18 @@ define([
 		return this._ws !== null && this._ws.readyState === 1;
 	};
 
-
 	SocketLog.prototype._handleJavascriptAutocomplete = function(value) {
 		var hints = jsComplete.autocomplete(value, window);
 
 		this._request('javascript-autocomplete-response', {
 			hints: hints
 		});
+	};
+
+	SocketLog.prototype._handleExecuteJavascript = function(value) {
+		var result = eval(value);
+
+		this._log('javascript', 'LogViking', result);
 	};
 
 	return SocketLog;
