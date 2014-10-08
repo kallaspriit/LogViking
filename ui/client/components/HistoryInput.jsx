@@ -19,7 +19,9 @@ define([
 				getOptions: React.PropTypes.func.isRequired,
 				selectOption: React.PropTypes.func.isRequired,
 				removeOption: React.PropTypes.func.isRequired,
-				clearOptions: React.PropTypes.func
+				clearOptions: React.PropTypes.func.isRequired,
+				getSettings: React.PropTypes.func.isRequired,
+				onKeyDown: React.PropTypes.func
 			})
 		},
 
@@ -33,6 +35,12 @@ define([
 			var value = e.target.value;
 
 			this.props.source.onValueBlur(value);
+		},
+
+		onKeyDown: function(e) {
+			if (typeof this.props.source.onKeyDown === 'function') {
+				this.props.source.onKeyDown(e);
+			}
 		},
 
 		clearValue: function() {
@@ -92,13 +100,15 @@ define([
 
 			settings = $.extend({
 				dropdownAlign: 'left',
-				dropup: false
+				dropup: false,
+				className: '',
+				isDisabled: false
 			}, settings);
 
 			return (
 				<div className={'app-clearable-input' + (settings.className ? ' ' + settings.className : '')}>
 					<div className="input-group">
-						<input type="text" className="form-control" ref="input" placeholder={labels.placeholder} value={value} onChange={this.onValueChange} onBlur={this.onValueBlur}/>
+						<input type="text" className="form-control" ref="input" placeholder={labels.placeholder} value={value} onChange={this.onValueChange} onBlur={this.onValueBlur} onKeyDown={this.onKeyDown} disabled={settings.isDisabled ? 'disabled' : null}/>
 						<div className={'input-group-btn app-dropdown-with-buttons' + (settings.dropup ? ' dropup' : '')}>
 							/* check out https://codemirror.net/doc/manual.html#addon_javascript-hint */
 							<button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"><span className="caret"></span></button>

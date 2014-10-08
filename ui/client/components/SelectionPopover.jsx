@@ -11,7 +11,7 @@ define([
 
 		propTypes: {
 			source: React.PropTypes.shape({
-				getOptions: React.PropTypes.func.isRequired,
+				getOptions: React.PropTypes.func.isRequired
 			})
 		},
 
@@ -19,9 +19,12 @@ define([
 			log.info('render');
 
 			var highlight = this.props.source.getHighlight(),
-				options = this.props.source.getOptions().map(function(option, key) {
+				selectedIndex = this.props.source.getSelectedIndex(),
+				options = this.props.source.getOptions().map(function(option, index) {
+					var optionClass = index === selectedIndex ? 'selected' : '';
+
 					return (
-						<li key={key}><em>{highlight}</em><span>{option.replace(highlight, '')}</span></li>
+						<li key={index} className={optionClass}><em>{highlight}</em><span>{option.replace(highlight, '')}</span></li>
 					);
 				});
 		

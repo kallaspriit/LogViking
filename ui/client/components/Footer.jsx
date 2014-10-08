@@ -4,9 +4,10 @@ define([
 	'logviking/Logger',
 	'src/State',
 	'src/EventHub',
+	'src/Server',
 	'components/HistoryInput',
 	'components/SelectionPopover'
-], function(React, logger, state, eventHub, HistoryInput, SelectionPopover) {
+], function(React, logger, state, eventHub, server, HistoryInput, SelectionPopover) {
 	'use strict';
 	
 	var log = logger.get('FooterComponent');
@@ -15,22 +16,25 @@ define([
 
 		getInitialState: function() {
 			return {
-				autocompleteHints: []
+				autocompleteHints: [],
+				autocompleteSelectedIndex: 0
 			}
 		},
 
 		componentDidMount: function() {
-			eventHub.on(eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE, function() {
+			eventHub.on([eventHub.Change.EXECUTE_JAVASCRIPT_AUTOCOMPLETE, eventHub.Change.SERVER], function() {
 				this.forceUpdate();
 			}.bind(this));
 
 			eventHub.on(eventHub.Change.JAVASCRIPT_AUTOCOMPLETE_HINTS_UPDATED, function(hints) {
 				this.setState({
-					autocompleteHints: hints
+					autocompleteHints: hints,
+					autocompleteSelectedIndex: Math.min(
+						Math.max(this.state.autocompleteSelectedIndex, 0),
+						hints.length - 1
+					)
 				});
 			}.bind(this));
-
-			this.setupAutocompletePopover();
 		},
 
 		componentDidUpdate: function() {
@@ -40,14 +44,33 @@ define([
 			$autocompletePopover.css('left', autocompletePopoverPosition + 'px');
 		},
 
-		setupAutocompletePopover: function() {
+		getPartialAutocompleteValue: function() {
+			var value = state.executeJavascript.value,
+				lastDotPos = value.lastIndexOf('.');
 
+			if (lastDotPos === -1) {
+				return value;
+			} else {
+				return value.substr(lastDotPos + 1);
+			}
+		},
+
+		getBaseAutocompleteValue: function() {
+			var value = state.executeJavascript.value,
+				lastDotPos = value.lastIndexOf('.');
+
+			if (lastDotPos === -1) {
+				return '';
+			} else {
+				return value.substr(0, lastDotPos) + '.';
+			}
 		},
 
 		render: function () {
 			log.info('render');
 
-			var executeJavascriptSource = {
+			var hasInspected = server.getRpcInterface().hasInspected(),
+				executeJavascriptSource = {
 					getLabels: function() {
 						return {
 							placeholder: 'Execute remote JavaScript',
@@ -101,8 +124,41 @@ define([
 						return {
 							dropdownAlign: 'right',
 							dropup: true,
-							className: 'app-autocomplete-wrap'
+							className: 'app-autocomplete-wrap',
+							isDisabled: !hasInspected
 						}
+					}.bind(this),
+
+					onKeyDown: function(event) {
+						switch (event.keyCode) {
+							case 38: // up
+								this.state.autocompleteSelectedIndex--;
+							break;
+
+							case 40: // down
+								this.state.autocompleteSelectedIndex++;
+							break;
+
+							case 9: // tab
+								state.executeJavascript.value = this.getBaseAutocompleteValue() +
+									this.state.autocompleteHints[this.state.autocompleteSelectedIndex];
+							break;
+
+							default:
+								return;
+							break;
+						}
+
+						this.setState({
+							autocompleteSelectedIndex: Math.min(
+								Math.max(this.state.autocompleteSelectedIndex, 0),
+								this.state.autocompleteHints.length - 1
+							)
+						});
+
+						log.info('handled key event: ' + event.keyCode);
+
+						event.preventDefault();
 					}.bind(this)
 				},
 				autocompleteSource = {
@@ -111,15 +167,12 @@ define([
 					}.bind(this),
 
 					getHighlight: function() {
-						var value = state.executeJavascript.value,
-							lastDotPos = value.lastIndexOf('.');
+						return this.getPartialAutocompleteValue();
+					}.bind(this),
 
-						if (lastDotPos === -1) {
-							return value;
-						} else {
-							return value.substr(lastDotPos + 1);
-						}
-					}
+					getSelectedIndex: function() {
+						return this.state.autocompleteSelectedIndex;
+					}.bind(this)
 				};
 		
 			return (
