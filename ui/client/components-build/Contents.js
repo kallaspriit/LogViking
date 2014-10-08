@@ -4,11 +4,12 @@ define([
 	'logviking/Logger',
 	'src/State',
 	'src/EventHub',
+	'src/Util',
 	'models/LogEntryFilter',
 	'models/LogEntriesModel',
 	'components/LogContentsTable',
 	'components/LogHeaderTable'
-], function(React, logger, state, eventHub, LogEntryFilter, logEntries, LogContentsTable, LogHeaderTable) {
+], function(React, logger, state, eventHub, util, LogEntryFilter, logEntries, LogContentsTable, LogHeaderTable) {
 	'use strict';
 	
 	var log = logger.get('ContentsComponent');
@@ -25,7 +26,11 @@ define([
 		componentDidMount: function() {
 			eventHub.on(
 				[eventHub.Change.TYPE_FILTER, eventHub.Change.CONTENT_FILTER, eventHub.Change.LOG_ENTRIES],
-				this.updateLogEntries
+				function() {
+					util.performDelayed('update-log-entries', function() {
+						this.updateLogEntries();
+					}.bind(this), 100);
+				}.bind(this)
 			);
 		},
 

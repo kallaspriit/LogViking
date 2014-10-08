@@ -12,17 +12,13 @@ define([
 	 */
 	var SocketLog = function(host, port) {
 		this._ws = null;
-
-		try {
-			this._ws = new WebSocket('ws://' + host + ':' + port);
-
-			this._ws.onopen = this._onSocketOpen.bind(this);
-			this._ws.onmessage = this._onSocketMessage.bind(this);
-			this._ws.onclose = this._onSocketClose.bind(this);
-		} catch (e) {}
-
+		this._host = host;
+		this._port = port;
 		this._messageCount = 0;
 		this._requestQueue = [];
+		this._hadValidConnection = false;
+
+		this._connect(this._host, this._port);
 	};
 
 	SocketLog.prototype.log = function() {
@@ -128,6 +124,20 @@ define([
 		return name;
 	};
 
+	SocketLog.prototype._connect = function(host, port) {
+		try {
+			this._ws = new WebSocket('ws://' + host + ':' + port);
+
+			this._ws.onopen = this._onSocketOpen.bind(this);
+			this._ws.onmessage = this._onSocketMessage.bind(this);
+			this._ws.onclose = this._onSocketClose.bind(this);
+		} catch (e) {}
+	};
+
+	SocketLog.prototype._reconnect = function() {
+		this._connect(this._host, this._port);
+	};
+
 	SocketLog.prototype._onSocketOpen = function() {
 		var request;
 
@@ -146,6 +156,8 @@ define([
 
 			this._request(request.handler, request.parameters);
 		}
+
+		this._hadValidConnection = true;
 	};
 
 	SocketLog.prototype._onSocketMessage = function(payload) {
@@ -163,7 +175,11 @@ define([
 	};
 
 	SocketLog.prototype._onSocketClose = function() {
-		this._request('refresh');
+		if (this._hadValidConnection) {
+			window.setTimeout(function() {
+				this._reconnect();
+			}.bind(this), 1000);
+		}
 	};
 
 	SocketLog.prototype._isConnectionValid = function() {

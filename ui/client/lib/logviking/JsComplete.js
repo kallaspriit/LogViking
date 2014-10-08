@@ -11,6 +11,7 @@ define([
 				hints = [],
 				options = [],
 				missedToken = null,
+				option,
 				i,
 				key;
 
@@ -34,7 +35,13 @@ define([
 
 			if (typeof ref === 'object' && ref !== null) {
 				for (key in ref) {
-					options.push(key);
+					option = key;
+
+					if (typeof ref[key] === 'function') {
+						option += '()';
+					}
+
+					options.push(option);
 				}
 			} else if (typeof ref === 'string') {
 				options = [
