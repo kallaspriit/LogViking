@@ -11,7 +11,10 @@ define([
 
 		propTypes: {
 			source: React.PropTypes.shape({
-				getOptions: React.PropTypes.func.isRequired
+				getOptions: React.PropTypes.func.isRequired,
+				selectOption: React.PropTypes.func.isRequired,
+				getHighlight: React.PropTypes.func.isRequired,
+				getSelectedIndex: React.PropTypes.func.isRequired
 			})
 		},
 
@@ -21,12 +24,15 @@ define([
 			var highlight = this.props.source.getHighlight(),
 				selectedIndex = this.props.source.getSelectedIndex(),
 				options = this.props.source.getOptions().map(function(option, index) {
-					var optionClass = index === selectedIndex ? 'selected' : '';
+					var optionClass = index === selectedIndex ? 'selected' : '',
+						onSelectOption = function() {
+							this.props.source.selectOption(index);
+						}.bind(this);
 
 					return (
-						<li key={index} className={optionClass}><em>{highlight}</em><span>{option.replace(highlight, '')}</span></li>
+						<li key={index} className={optionClass} onClick={onSelectOption}><em>{highlight}</em><span>{option.replace(highlight, '')}</span></li>
 					);
-				});
+				}.bind(this));
 		
 			return (
 				<ul className="app-selection-popover">

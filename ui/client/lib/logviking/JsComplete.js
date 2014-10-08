@@ -3,18 +3,23 @@ define([
 	'use strict';
 	
 	return {
-		autocomplete: function (input, context) {
+		autocomplete: function (value, context) {
 			context = context || window;
 
-			var tokens = input.split('.'),
+			var tokens = value.split('.'),
 				ref = context,
 				hints = [],
+				options = [],
 				missedToken = null,
 				i,
 				key;
 
 			for (i = 0; i < tokens.length; i++) {
 				if (typeof ref[tokens[i]] === 'undefined') {
+					if (i < tokens.length - 1) {
+						return [];
+					}
+
 					missedToken = tokens[i];
 
 					break;
@@ -29,9 +34,28 @@ define([
 
 			if (typeof ref === 'object' && ref !== null) {
 				for (key in ref) {
-					if (key.substr(0, missedToken.length).toLowerCase() === missedToken.toLowerCase()) {
-						hints.push(key);
-					}
+					options.push(key);
+				}
+			} else if (typeof ref === 'string') {
+				options = [
+					'charAt()', 'charCodeAt()', 'concat()', 'fromCharCode()', 'indexOf()', 'lastIndexOf()',
+					'localeCompare()',  'match()', 'replace()', 'search()', 'slice()', 'split()', 'substr()',
+					'substring()', 'toLocaleLowerCase()',  'toLocaleUpperCase()', 'toLowerCase()', 'toString()',
+					'toUpperCase()', 'trim()', 'valueOf()'
+				];
+			} else if (typeof ref === 'number') {
+				options = [
+					'toExponential()', 'toFixed()', 'toPrecision()', 'toString()', 'valueOf()'
+				];
+			}
+			// TODO handle Date etc
+
+			for (i = 0; i < options.length; i++) {
+				if (
+					options[i].length > missedToken.length
+					&& options[i].substr(0, missedToken.length).toLowerCase() === missedToken.toLowerCase()
+				) {
+					hints.push(options[i]);
 				}
 			}
 

@@ -140,6 +140,12 @@ define([
 							break;
 
 							case 9: // tab
+								if (typeof this.state.autocompleteHints[this.state.autocompleteSelectedIndex] === 'undefined') {
+									event.preventDefault();
+
+									return;
+								}
+
 								state.executeJavascript.value = this.getBaseAutocompleteValue() +
 									this.state.autocompleteHints[this.state.autocompleteSelectedIndex];
 							break;
@@ -164,6 +170,21 @@ define([
 				autocompleteSource = {
 					getOptions: function() {
 						return this.state.autocompleteHints
+					}.bind(this),
+
+					selectOption: function(index) {
+						if (typeof this.state.autocompleteHints[index] === 'undefined') {
+							return;
+						}
+
+						log.info('select: "' + this.state.autocompleteHints[index] + '"');
+
+						state.executeJavascript.value = this.getBaseAutocompleteValue() +
+							this.state.autocompleteHints[index];
+
+						$(this.refs.executeJavascript.getDOMNode()).find('INPUT:first').focus();
+
+						this.forceUpdate();
 					}.bind(this),
 
 					getHighlight: function() {

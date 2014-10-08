@@ -1,4 +1,6 @@
-define(function() {
+define([
+	'logviking/JsComplete'
+], function(jsComplete) {
 	'use strict';
 
 	/**
@@ -15,6 +17,7 @@ define(function() {
 			this._ws = new WebSocket('ws://' + host + ':' + port);
 
 			this._ws.onopen = this._onSocketOpen.bind(this);
+			this._ws.onmessage = this._onSocketMessage.bind(this);
 			this._ws.onclose = this._onSocketClose.bind(this);
 		} catch (e) {}
 
@@ -129,6 +132,11 @@ define(function() {
 		var request;
 
 		this._requestQueue.unshift({
+			handler: 'becomeInspected',
+			parameters: {}
+		});
+
+		this._requestQueue.unshift({
 			handler: 'refresh',
 			parameters: {}
 		});
@@ -140,12 +148,35 @@ define(function() {
 		}
 	};
 
+	SocketLog.prototype._onSocketMessage = function(payload) {
+		if (payload.type !== 'message' || payload.data.substr(0, 1) !== '{') {
+			return;
+		}
+
+		var request = JSON.parse(payload.data);
+
+		switch (request.handler) {
+			case 'javascript-autocomplete':
+				this._handleJavascriptAutocomplete(request.parameters.value);
+			break;
+		}
+	};
+
 	SocketLog.prototype._onSocketClose = function() {
 		this._request('refresh');
 	};
 
 	SocketLog.prototype._isConnectionValid = function() {
 		return this._ws !== null && this._ws.readyState === 1;
+	};
+
+
+	SocketLog.prototype._handleJavascriptAutocomplete = function(value) {
+		var hints = jsComplete.autocomplete(value, window);
+
+		this._request('javascript-autocomplete-response', {
+			hints: hints
+		});
 	};
 
 	return SocketLog;
