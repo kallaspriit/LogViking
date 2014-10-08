@@ -80,6 +80,10 @@ define([
 		eventHub.on(eventHub.Intent.EXECUTE_REMOTE_JAVASCRIPT, function(value) {
 			this._executeRemoteJavascript(value);
 		}.bind(this));
+
+		eventHub.on(eventHub.Intent.RELOAD_TARGET, function() {
+			this._reloadTarget();
+		}.bind(this));
 	};
 
 	Application.prototype._onReloading = function() {
@@ -98,6 +102,12 @@ define([
 		log.info('executing remove javascript: ' + value);
 
 		server.getRpcInterface().executeRemoteJavascript(value);
+	};
+
+	Application.prototype._reloadTarget = function() {
+		log.info('reloading target');
+
+		server.getRpcInterface().reloadTarget();
 	};
 
 	return Application;

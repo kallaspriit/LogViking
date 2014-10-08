@@ -79,6 +79,11 @@ define([
 			eventHub.emit(eventHub.Intent.CLEAR_MESSAGES);
 		},
 
+		reloadTarget: function() {
+			eventHub.emit(eventHub.Intent.CLEAR_MESSAGES);
+			eventHub.emit(eventHub.Intent.RELOAD_TARGET);
+		},
+
 		render: function () {
 			log.info('render');
 		
@@ -86,7 +91,7 @@ define([
 				<div className="container-fluid app-contents">
 					<div className="btn-group app-clear-btn">
 						<button type="button" className="btn btn-sm btn-default" onClick={this.clearMessages}>Clear messages</button>
-						<button type="button" className="btn btn-sm btn-default">Reload target</button>
+						<button type="button" className="btn btn-sm btn-default" onClick={this.reloadTarget}>Reload target</button>
 					</div>
 
 					<div className="app-content-header">

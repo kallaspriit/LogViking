@@ -103,6 +103,13 @@ define([
 		});
 	};
 
+	ServerRpcInterface.prototype.reloadTarget = function(value) {
+		this._sendToInspected({
+			handler: 'reload',
+			parameters: {}
+		});
+	};
+
 	ServerRpcInterface.prototype._broadcastInspectors = function(message) {
 		var clients = this._socketServer.getClients(),
 			i;

@@ -15,7 +15,8 @@ define([
 	EventHub.Intent = EventHub.prototype.Intent = {
 		UPDATE_JAVASCRIPT_AUTOCOMPLETE: 'update-javascript-autocomplete',
 		EXECUTE_REMOTE_JAVASCRIPT: 'execute-remote-javascript',
-		CLEAR_MESSAGES: 'clear-messages'
+		CLEAR_MESSAGES: 'clear-messages',
+		RELOAD_TARGET: 'reload-target'
 	};
 
 	EventHub.Change = EventHub.prototype.Change = {
