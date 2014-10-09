@@ -12,7 +12,8 @@ define([
 ], function(React, logger, state, eventHub, util, LogEntryFilter, logEntries, LogContentsTable, LogHeaderTable) {
 	'use strict';
 	
-	var log = logger.get('ContentsComponent');
+	var log = logger.get('ContentsComponent'),
+		updateInterval;
 
 	var Contents = React.createClass({
 
@@ -36,6 +37,14 @@ define([
 			eventHub.on(eventHub.Intent.CLEAR_MESSAGES, function() {
 				logEntries.clear();
 			}.bind(this));
+
+			updateInterval = window.setInterval(function() {
+				this.updateLogEntries();
+			}.bind(this), 60 * 1000);
+		},
+		
+		componentWillUnmount: function() {
+			window.clearInterval(updateInterval);
 		},
 
 		componentDidUpdate: function() {
@@ -46,7 +55,7 @@ define([
 			}
 		},
 
-		updateLogEntries: function(entry) {
+		updateLogEntries: function() {
 			var filter = new LogEntryFilter({
 					type: {
 						log: state.typeFilter.log,

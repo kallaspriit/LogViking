@@ -3,7 +3,8 @@ define([
 	'jquery',
 	'React',
 	'logviking/Logger',
-	'src/Formatter'
+	'src/Formatter',
+	'timeago'
 ], function($, React, logger, formatter) {
 	'use strict';
 	
@@ -15,6 +16,10 @@ define([
 			this.updateTableColumnWidths();
 
 			$(window).resize(this.updateTableColumnWidths);
+		},
+
+		componentDidUpdate: function() {
+			$('.app-entry-date').timeago().removeClass('app-entry-date');
 		},
 
 		updateTableColumnWidths: function() {
@@ -50,7 +55,7 @@ define([
 			var rows = this.props.logEntries.map(function(entry) {
 				return (
 					React.DOM.tr({key: entry.id, className: 'app-entry-' + entry.type}, 
-						React.DOM.td(null, "2 minute ago"), 
+						React.DOM.td({className: "app-entry-date", title: entry.date.toISOString()}, entry.date.toLocaleDateString()), 
 						React.DOM.td(null, entry.component), 
 						React.DOM.td({dangerouslySetInnerHTML: {__html: formatter.format(entry.data)}})
 					)
