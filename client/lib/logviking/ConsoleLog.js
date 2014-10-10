@@ -12,7 +12,7 @@ define([
 			componentNameWidth: 25,
 			timeWidth: 8,
 			trackTime: true,
-			useColors: true,
+			useColors: null,
 			colors: [
 				'lightseagreen',
 				'forestgreen',
@@ -32,6 +32,10 @@ define([
 			for (key in config) {
 				this._config[key] = config[key];
 			}
+		}
+
+		if (this._config.useColors === null) {
+			this._config.useColors = this._getDefaultUseColors();
 		}
 	};
 
@@ -133,6 +137,15 @@ define([
 		}
 
 		return (Array(padSize).join(' ')) + str;
+	};
+
+	ConsoleLog.prototype._getDefaultUseColors = function useColors() {
+		// is webkit? http://stackoverflow.com/a/16459606/376773
+		return ('WebkitAppearance' in document.documentElement.style) ||
+			// is firebug? http://stackoverflow.com/a/398120/376773
+			(window.console && (console.firebug || (console.exception && console.table))) ||
+			// is firefox >= v31? https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+			(navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
 	};
 
 	return ConsoleLog;
