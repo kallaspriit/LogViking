@@ -14,6 +14,8 @@ define([
 		this._levels = ['log', 'info', 'warn', 'error'];
 		this._reporters = [];
 		this._loggers = {};
+		this._preReportersQueue = [];
+		this._isEnabled = true;
 	};
 
 	/**
@@ -27,6 +29,17 @@ define([
 	 * @returns {Object}
 	 */
 	Logger.prototype.get = function(component) {
+		var logInterface = {},
+			i;
+
+		if (!this._isEnabled) {
+			for (i = 0; i < this._levels.length; i++) {
+				logInterface[this._levels[i]] = function () {}; // do nothing
+			}
+
+			return logInterface;
+		}
+
 		// return existing logger interface if already created
 		if (typeof(this._loggers[component]) !== 'undefined') {
 			return this._loggers[component];
@@ -35,9 +48,6 @@ define([
 		if (this._components.indexOf(component) === -1) {
 			this._components.push(component);
 		}
-
-		var logInterface = {},
-			i;
 
 		for (i = 0; i < this._levels.length; i++) {
 			logInterface[this._levels[i]] = function(j) {
@@ -48,6 +58,35 @@ define([
 		this._loggers[component] = logInterface;
 
 		return logInterface;
+	};
+
+	/**
+	 * Resets the logger.
+	 *
+	 * @method reset
+	 */
+	Logger.prototype.reset = function() {
+		this._components = [];
+		this._reporters = [];
+		this._loggers = {};
+		this._preReportersQueue = [];
+		this._isEnabled = true;
+	};
+
+	/**
+	 * Disables the logger and removes overhead.
+	 */
+	Logger.prototype.disable = function() {
+		this._isEnabled = false;
+	};
+
+	/**
+	 * Returns whether the logger is currently enabled.__defineGetter__
+	 *
+	 * @returns {boolean}
+	 */
+	Logger.prototype.isEnabled = function() {
+		return this._isEnabled;
 	};
 
 	/**
@@ -64,6 +103,35 @@ define([
 	 */
 	Logger.prototype.addReporter = function(reporter) {
 		this._reporters.push(reporter);
+
+		// give some time for more reporters to get added
+		window.setTimeout(function() {
+			this._reportQueuedMessages();
+		}.bind(this), 100);
+	};
+
+	/**
+	 * Registers a list of new log reporter.
+	 *
+	 * The reporter should be an object with methods called:
+	 * - log
+	 * - info
+	 * - warn
+	 * - error
+	 *
+	 * @method addReporters
+	 * @param {Object} reporter1 First reporter to add
+	 * @param {Object} [reporter2] Second reporter to add
+	 * @param {Object} [reporterN] Any number of reporters can follow
+	 */
+	Logger.prototype.addReporters = function(/*reporter1, reporter2, reporterN*/) {
+		var i;
+
+		for (i = 0; i < arguments.length; i++) {
+			this.addReporter(arguments[i]);
+		}
+
+		this._reportQueuedMessages();
 	};
 
 	/**
@@ -121,11 +189,31 @@ define([
 			this._components.push(component);
 		}
 
-		for (i = 0; i < this._reporters.length; i++) {
-			this._reporters[i][type].apply(
-				this._reporters[i],
-				Array.prototype.slice.call(arguments, 0).slice(1)
-			);
+		if (this._reporters.length > 0) {
+			for (i = 0; i < this._reporters.length; i++) {
+				this._reporters[i][type].apply(
+					this._reporters[i],
+					Array.prototype.slice.call(arguments, 0).slice(1)
+				);
+			}
+		} else {
+			this._preReportersQueue.push(Array.prototype.slice.call(arguments, 0));
+		}
+	};
+
+	/**
+	 * Re-logs the queued messages that were registered when no reporters had beed added.
+	 *
+	 * @method _reportQueuedMessages
+	 * @private
+	 */
+	Logger.prototype._reportQueuedMessages = function() {
+		var message;
+
+		while (this._preReportersQueue.length > 0) {
+			message = this._preReportersQueue.shift();
+
+			this._log.apply(this, message);
 		}
 	};
 

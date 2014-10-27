@@ -9,7 +9,7 @@ define([
 
 		this._config = {
 			padComponent: true,
-			componentNameWidth: 25,
+			componentNameWidth: 20,
 			timeWidth: 8,
 			trackTime: true,
 			useColors: null,
@@ -55,7 +55,7 @@ define([
 		this._log.apply(this, ['error'].concat(Array.prototype.slice.call(arguments, 0)));
 	};
 
-	ConsoleLog.prototype._log = function(type, component) {
+	ConsoleLog.prototype._log = function(/*type, component*/) {
 		var parameters = Array.prototype.slice.call(arguments, 0),
 			deltaTime = null,
 			renderTime,

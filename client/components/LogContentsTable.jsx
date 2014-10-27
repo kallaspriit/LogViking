@@ -8,7 +8,41 @@ define([
 ], function($, React, logger, formatter) {
 	'use strict';
 	
-	var log = logger.get('LogContentsTableComponent');
+	var log = logger.get('LogContentsTableComponent'),
+		colors = [
+			'lightseagreen',
+			'forestgreen',
+			'goldenrod',
+			'dodgerblue',
+			'darkorchid',
+			'crimson',
+			'darkred',
+			'darkslategray'
+		],
+		colorIndex = 0,
+		componentToColorIndexMap = {};
+
+	// configure timeago
+	jQuery.timeago.settings.strings = {
+			prefixAgo: null,
+			prefixFromNow: null,
+			suffixAgo: "ago",
+			suffixFromNow: "from now",
+			inPast: 'any moment now',
+			seconds: "seconds",
+			minute: "minute",
+			minutes: "%dm",
+			hour: "hour",
+			hours: "%d hours",
+			day: "day",
+			days: "%d days",
+			month: "month",
+			months: "%d months",
+			year: "year",
+			years: "%d years",
+			wordSeparator: " ",
+			numbers: []
+		  };
 
 	var LogContentsTable = React.createClass({
 
@@ -53,10 +87,22 @@ define([
 			log.info('render', this.props.logEntries.length);
 
 			var rows = this.props.logEntries.map(function(entry) {
+				var color,
+					style;
+
+				if (typeof componentToColorIndexMap[entry.component] === 'undefined') {
+					componentToColorIndexMap[entry.component] = colorIndex;
+
+					colorIndex = (colorIndex + 1) % colors.length;
+				}
+
+				color = colors[componentToColorIndexMap[entry.component]];
+				style = {color: color};
+
 				return (
 					<tr key={entry.id} className={'app-entry-' + entry.type}>
 						<td className="app-entry-date" title={entry.date.toISOString()}>{entry.date.toLocaleDateString()}</td>
-						<td>{entry.component}</td>
+						<td style={style}>{entry.component}</td>
 						<td dangerouslySetInnerHTML={{__html: formatter.format(entry.data)}}></td>
 					</tr>
 				);
