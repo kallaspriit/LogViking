@@ -70,6 +70,9 @@ define([
 	};
 
 	SocketLog.prototype._request = function(handler, parameters) {
+		var id = this._messageCount++,
+			payload = '';
+
 		if (!this._isConnectionValid()) {
 			this._requestQueue.push({
 				handler: handler,
@@ -79,20 +82,19 @@ define([
 			return;
 		}
 
-		var payload = JSON.stringify({
-			id: this._messageCount++,
-			handler: handler,
-			parameters: parameters,
-			expectResponse: false
-		});
-
-		if (payload.length > 1024) {
-			JSON.stringify({
-				id: 0,
+		try {
+			payload = JSON.stringify({
+				id: id,
 				handler: handler,
-				parameters: '<{[LONG]}>',
+				parameters: parameters,
 				expectResponse: false
 			});
+		} catch (e) {
+			throw new Error('serializing failed (' + e.message + ')');
+		}
+
+		if (payload.length > 1024) {
+			throw new Error('message too long');
 		}
 
 		this._ws.send(payload);
@@ -164,7 +166,16 @@ define([
 		while (this._requestQueue.length > 0) {
 			request = this._requestQueue.shift();
 
-			this._request(request.handler, request.parameters);
+			try {
+				this._request(request.handler, request.parameters);
+			} catch (e) {
+				this._request('log', {
+					type: request.parameters.type,
+					component: request.parameters.component,
+					parameters: ['evaluation failed: ' + e.message],
+					date: new Date()
+				});
+			}
 		}
 
 		this._hadValidConnection = true;

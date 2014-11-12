@@ -89,24 +89,28 @@
 	border-left-color: #5BC0DE;
 }
 .app-log-table TR.app-entry-info:hover TD {
+/*.app-log-table TR.app-entry-info TD {*/
 	background-color: #d9edf7;
 }
 .app-log-table TR.app-entry-warn TD:first-child {
 	border-left-color: #F0AD4E;
 }
-.app-log-table TR.app-entry-warn:hover TD {
+/*.app-log-table TR.app-entry-warn:hover TD {*/
+.app-log-table TR.app-entry-warn TD {
 	background-color: #fcf8e3;
 }
 .app-log-table TR.app-entry-error TD:first-child {
 	border-left-color: #D9534F;
 }
-.app-log-table TR.app-entry-error:hover TD {
+/*.app-log-table TR.app-entry-error:hover TD {*/
+.app-log-table TR.app-entry-error TD {
 	background-color: #f2dede;
 }
 .app-log-table TR.app-entry-javascript TD:first-child {
 	border-left-color: #5CB85C;
 }
-.app-log-table TR.app-entry-javascript:hover TD {
+/*.app-log-table TR.app-entry-javascript:hover TD {*/
+.app-log-table TR.app-entry-javascript TD {
 	background-color: #dff0d8;
 }
 .app-layout-row TD {

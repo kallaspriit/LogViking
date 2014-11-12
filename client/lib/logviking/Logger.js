@@ -25,8 +25,8 @@ define([
 	 * all requests.
 	 *
 	 * @method get
-	 * @param {String} component Component name
-	 * @returns {Object}
+	 * @param {string} component Component name
+	 * @returns {object}
 	 */
 	Logger.prototype.get = function(component) {
 		var logInterface = {},
@@ -99,15 +99,12 @@ define([
 	 * - error
 	 *
 	 * @method addReporter
-	 * @param {Object} reporter Reporter to add
+	 * @param {object} reporter Reporter to add
 	 */
 	Logger.prototype.addReporter = function(reporter) {
 		this._reporters.push(reporter);
 
-		// give some time for more reporters to get added
-		window.setTimeout(function() {
-			this._reportQueuedMessages();
-		}.bind(this), 100);
+		this._reportQueuedMessages();
 	};
 
 	/**
@@ -120,15 +117,15 @@ define([
 	 * - error
 	 *
 	 * @method addReporters
-	 * @param {Object} reporter1 First reporter to add
-	 * @param {Object} [reporter2] Second reporter to add
-	 * @param {Object} [reporterN] Any number of reporters can follow
+	 * @param {object} reporter1 First reporter to add
+	 * @param {object} [reporter2] Second reporter to add
+	 * @param {object} [reporterN] Any number of reporters can follow
 	 */
 	Logger.prototype.addReporters = function(/*reporter1, reporter2, reporterN*/) {
 		var i;
 
 		for (i = 0; i < arguments.length; i++) {
-			this.addReporter(arguments[i]);
+			this._reporters.push(arguments[i]);
 		}
 
 		this._reportQueuedMessages();
@@ -178,8 +175,8 @@ define([
 	 * Private method used to pass the log messages to reporters.
 	 *
 	 * @method _log
-	 * @param {String} type Message type
-	 * @param {String} component Component name
+	 * @param {string} type Message type
+	 * @param {string} component Component name
 	 * @private
 	 */
 	Logger.prototype._log = function(type, component/*, arg1, ...*/) {
