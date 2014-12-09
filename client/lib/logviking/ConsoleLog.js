@@ -9,9 +9,11 @@ define([
 
 		this._config = {
 			padComponent: true,
-			componentNameWidth: 20,
+			componentNameWidth: 24,
 			timeWidth: 8,
+			blockTimeReset: 2000,
 			trackTime: true,
+			trackTimeByComponent: false,
 			useColors: null,
 			colors: [
 				'lightseagreen',
@@ -27,6 +29,9 @@ define([
 		this._colorIndex = 0;
 		this._componentToColorIndexMap = {};
 		this._componentLastLogTime = {};
+		this._firstMessageTime = null;
+		this._lastMessageTime = null;
+		this._blockTimeTimeout = null;
 
 		if (typeof config === 'object' && config !== null) {
 			for (key in config) {
@@ -58,10 +63,10 @@ define([
 	ConsoleLog.prototype._log = function(/*type, component*/) {
 		var parameters = Array.prototype.slice.call(arguments, 0),
 			deltaTime = null,
-			renderTime,
+			timeSinceStart = 0,
 			currentTime,
-			timeUnit,
 			type,
+			logType,
 			component,
 			paddedComponent,
 			color,
@@ -102,31 +107,66 @@ define([
 		if (this._config.trackTime) {
 			currentTime = (new Date()).getTime();
 
-			if (typeof this._componentLastLogTime[component] !== 'undefined') {
+			if (this._config.trackTimeByComponent && typeof this._componentLastLogTime[component] !== 'undefined') {
 				deltaTime = currentTime - this._componentLastLogTime[component];
+			} else if (!this._config.trackTimeByComponent && this._lastMessageTime !== null) {
+				deltaTime = currentTime - this._lastMessageTime;
+			}
+
+			if (this._firstMessageTime !== null) {
+				timeSinceStart = currentTime - this._firstMessageTime;
+			} else {
+				this._firstMessageTime = currentTime;
 			}
 
 			this._componentLastLogTime[component] = currentTime;
 
 			if (deltaTime !== null) {
-				renderTime = deltaTime;
-				timeUnit = 'ms';
-
-				if (deltaTime > 60000) {
-					renderTime = (deltaTime / 60000).toPrecision(2);
-					timeUnit = 'm';
-				} else if (deltaTime > 2000) {
-					renderTime = (deltaTime / 1000).toPrecision(3);
-					timeUnit = 's';
-				}
-
-				data[0] = this._pad(renderTime.toString() + timeUnit, this._config.timeWidth) + data[0];
+				data[0] = this._pad(this._formatTime(deltaTime), this._config.timeWidth) + data[0];
 			} else {
 				data[0] = this._pad('', this._config.timeWidth) + data[0];
 			}
+
+			data[0] = this._pad(this._formatTime(timeSinceStart), this._config.timeWidth) + data[0];
+
+			this._lastMessageTime = currentTime;
 		}
 
-		console[type].apply(console, data);
+		if (this._blockTimeTimeout !== null) {
+			window.clearTimeout(this._blockTimeTimeout);
+			this._blockTimeTimeout = null;
+		}
+
+		this._blockTimeTimeout = window.setTimeout(function() {
+			this._firstMessageTime = null;
+			this._blockTimeTimeout = null;
+			this._lastMessageTime = null;
+			console.log('');
+		}.bind(this), this._config.blockTimeReset);
+
+		logType = type;
+
+		// fake info messages to be "log" type
+		if (logType === 'info') {
+			logType = 'log';
+		}
+
+		console[logType].apply(console, data);
+	};
+
+	ConsoleLog.prototype._formatTime = function(milliseconds) {
+		var formattedTime = milliseconds,
+			unit = 'ms';
+
+		if (milliseconds > 60000) {
+			formattedTime = (milliseconds / 60000).toPrecision(2);
+			unit = 'm';
+		} else if (milliseconds > 2000) {
+			formattedTime = (milliseconds / 1000).toPrecision(3);
+			unit = 's';
+		}
+
+		return formattedTime.toString() + unit;
 	};
 
 	ConsoleLog.prototype._pad = function(str, width) {
@@ -136,7 +176,7 @@ define([
 			return str;
 		}
 
-		return (Array(padSize).join(' ')) + str;
+		return (new Array(padSize).join(' ')) + str;
 	};
 
 	ConsoleLog.prototype._getDefaultUseColors = function useColors() {
