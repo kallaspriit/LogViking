@@ -133,11 +133,12 @@ define([
 		}
 
 		if (this._blockTimeTimeout !== null) {
-			window.clearTimeout(this._blockTimeTimeout);
+			clearTimeout(this._blockTimeTimeout);
+
 			this._blockTimeTimeout = null;
 		}
 
-		this._blockTimeTimeout = window.setTimeout(function() {
+		this._blockTimeTimeout = setTimeout(function() {
 			this._firstMessageTime = null;
 			this._blockTimeTimeout = null;
 			this._lastMessageTime = null;
@@ -180,6 +181,11 @@ define([
 	};
 
 	ConsoleLog.prototype._getDefaultUseColors = function useColors() {
+		if (typeof document === 'undefined') {
+			// TODO implement colors for normal consoles
+			return false;
+		}
+
 		// is webkit? http://stackoverflow.com/a/16459606/376773
 		return ('WebkitAppearance' in document.documentElement.style) ||
 			// is firebug? http://stackoverflow.com/a/398120/376773

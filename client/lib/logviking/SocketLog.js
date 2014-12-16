@@ -38,8 +38,7 @@ define([
 	};
 
 	SocketLog.prototype._log = function(type, component) {
-		var parameters = Array.prototype.slice.call(arguments, 0).slice(2),
-			clone;
+		var parameters = Array.prototype.slice.call(arguments, 0).slice(2);
 
 		/*try {
 			if (parameters !== null && typeof parameters === 'object' && !Array.isArray(parameters)) {
@@ -137,12 +136,20 @@ define([
 	};
 
 	SocketLog.prototype._connect = function(host, port) {
+		// use einaros/ws in node.js
+		var WebSocketClient = typeof WebSocket !== 'undefined' ? WebSocket : null;
+
+		if (WebSocketClient === null && typeof require === 'function') {
+			WebSocketClient = require('ws');
+		}
+
 		try {
-			this._ws = new WebSocket('ws://' + host + ':' + port);
+			this._ws = new WebSocketClient('ws://' + host + ':' + port);
 
 			this._ws.onopen = this._onSocketOpen.bind(this);
 			this._ws.onmessage = this._onSocketMessage.bind(this);
 			this._ws.onclose = this._onSocketClose.bind(this);
+			this._ws.onerror = this._onSocketError.bind(this);
 		} catch (e) {}
 	};
 
@@ -205,6 +212,10 @@ define([
 				this._reconnect();
 			}.bind(this), 1000);
 		}
+	};
+
+	SocketLog.prototype._onSocketError = function() {
+
 	};
 
 	SocketLog.prototype._isConnectionValid = function() {
