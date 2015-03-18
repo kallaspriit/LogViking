@@ -208,7 +208,7 @@ define([
 
 	SocketLog.prototype._onSocketClose = function() {
 		if (this._hadValidConnection) {
-			window.setTimeout(function() {
+			setTimeout(function() {
 				this._reconnect();
 			}.bind(this), 1000);
 		}
@@ -223,7 +223,7 @@ define([
 	};
 
 	SocketLog.prototype._handleJavascriptAutocomplete = function(value) {
-		var hints = jsComplete.autocomplete(value, window);
+		var hints = jsComplete.autocomplete(value, window || {});
 
 		this._request('javascript-autocomplete-response', {
 			hints: hints
